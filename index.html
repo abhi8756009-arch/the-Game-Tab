@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TAB GAMEPAD - Ultimate Suite</title>
+    <!-- Tailwind CSS for Dark Gaming Design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Gaming Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Touch actions prevention for tactile click responsiveness */
+        touch-action: manipulation;
+
+        /* Cyberpunk Neon Glow Designs */
+        .neon-card-idle {
+            border: 2px solid #1e293b;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        .neon-card-active {
+            border: 2px solid #a855f7;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.25);
+            transition: all 0.3s ease;
+        }
+        .neon-card-paused {
+            border: 2px solid #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        .neon-card-warning {
+            border: 2px solid #eab308;
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.5);
+            animation: warning-pulse 1s infinite alternate;
+        }
+        .neon-card-danger {
+            border: 2px solid #ef4444;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.7);
+            animation: danger-pulse 0.7s infinite alternate;
+        }
+
+        @keyframes warning-pulse {
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(234, 179, 8, 0.3); }
+            100% { transform: scale(1.015); box-shadow: 0 0 25px rgba(234, 179, 8, 0.6); }
+        }
+        @keyframes danger-pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+            100% { transform: scale(1.025); box-shadow: 0 0 35px rgba(239, 68, 68, 0.8); }
+        }
+
+        .glass-hud {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .scanline-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .scanline-effect::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+            z-index: 5;
+            background-size: 100% 3px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col select-none scanline-effect">
+
+    <!-- Top Premium Decorated Navigation Header -->
+    <header class="bg-slate-900/90 border-b-2 border-purple-600 sticky top-0 z-50 px-4 py-3 shadow-[0_4px_25px_rgba(147,51,234,0.15)] backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <!-- Brand Title -->
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-purple-600 via-pink-600 to-yellow-500 p-2.5 rounded-2xl shadow-[0_0_15px_rgba(168,85,247,0.4)] border border-purple-400">
+                    <i class="fa-solid fa-gamepad text-xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-widest bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(236,72,153,0.3)]">
+                        TAB GAMEPAD
+                    </h1>
+                    <p class="text-[9px] font-extrabold text-slate-400 tracking-widest uppercase flex items-center gap-1 mt-0.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> 
+                        Ultimate Screen Timer Suite v5.1
+                    </p>
+                </div>
+            </div>
+
+            <!-- Global Actions Block -->
+            <div class="flex items-center gap-2">
+                <!-- Add Custom Screen Button -->
+                <button onclick="openAddScreenModal()" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-[10px] px-3.5 py-2.5 rounded-xl font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-lg active:scale-95 transition-all">
+                    <i class="fa-solid fa-square-plus"></i> Add New Screen
+                </button>
+                <!-- Lockscreen Notification Activator -->
+                <button id="notifyBtn" onclick="requestNotificationPermission()" class="bg-slate-950 hover:bg-slate-800 text-[10px] px-3.5 py-2.5 rounded-xl font-black text-purple-300 tracking-wider flex items-center gap-2 transition-all border border-purple-900/60 shadow-[0_0_10px_rgba(139,92,246,0.1)]">
+                    <i id="notifyIcon" class="fa-solid fa-bell text-yellow-400 animate-bounce"></i>
+                    <span id="notifyTxt">ACTIVATE ALARM</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Dashboard -->
+    <main class="max-w-7xl w-full mx-auto p-4 flex-grow pb-28">
+        
+        <!-- Live HUD Counter Stats -->
+        <section class="grid grid-cols-3 gap-3 mb-6">
+            <div class="bg-slate-900/40 border border-slate-800/80 p-3 rounded-2xl text-center relative overflow-hidden">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Screens</p>
+                <h3 class="text-lg font-black text-green-400 mt-1" id="activeCounter">0</h3>
+            </div>
+            <div class="bg-slate-900/40 border border-slate-800/80 p-3 rounded-2xl text-center relative overflow-hidden">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">10m Warnings</p>
+                <h3 class="text-lg font-black text-yellow-400 mt-1" id="warningCounter">0</h3>
+            </div>
+            <div class="bg-slate-900/40 border border-slate-800/80 p-3 rounded-2xl text-center relative overflow-hidden">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Siren Triggered</p>
+                <h3 class="text-lg font-black text-red-500 mt-1" id="alarmCounter">0</h3>
+            </div>
+        </section>
+
+        <!-- S1-S5 and Custom Screens Workspace -->
+        <section class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xs font-black text-slate-300 tracking-widest uppercase flex items-center gap-1.5">
+                    <i class="fa-solid fa-microchip text-purple-500"></i> Active Station Monitors
+                </h2>
+                <div class="text-[9px] text-slate-500 font-bold bg-slate-900/80 border border-slate-800 px-2.5 py-1 rounded-full">
+                    Performance Boosted (Zero Lag & Power Cut Proof)
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4" id="screensWorkspace">
+                <!-- Screens dynamic injection -->
+            </div>
+        </section>
+
+        <!-- Earnings Ledger -->
+        <section class="border-t border-slate-900 pt-4">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-xs font-black text-slate-300 tracking-widest uppercase flex items-center gap-1.5">
+                    <i class="fa-solid fa-wallet text-emerald-500"></i> Daily Play Cash Register
+                </h3>
+                <div class="bg-slate-900 border border-emerald-950/60 px-3 py-1 rounded-full text-[10px] font-bold text-emerald-400">
+                    Day Earnings: ₹<span id="earningSum">0</span>
+                </div>
+            </div>
+            
+            <div class="bg-slate-950/90 border border-slate-900 rounded-2xl overflow-hidden max-h-36 overflow-y-auto">
+                <table class="w-full text-left text-[10px] border-collapse">
+                    <thead>
+                        <tr class="bg-slate-900/70 border-b border-slate-800 text-slate-400 font-bold uppercase tracking-widest">
+                            <th class="p-2">Screen ID</th>
+                            <th class="p-2">Play Time</th>
+                            <th class="p-2">Billing Amount</th>
+                            <th class="p-2 text-right">Completion Log</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody" class="divide-y divide-slate-900 text-slate-300">
+                        <!-- Dynamic Logs Rows -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="flex justify-end mt-2">
+                <button onclick="clearLogs()" class="text-[9px] font-extrabold uppercase text-red-400/80 hover:text-red-400 flex items-center gap-1 transition-all">
+                    <i class="fa-solid fa-trash-arrow-up"></i> Reset Registry History
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PREMIUM BOTTOM DECORATIVE HUD BAR -->
+    <div class="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t-2 border-pink-500 p-3.5 flex flex-col sm:flex-row justify-between items-center gap-3.5 z-40 shadow-[0_-10px_25px_rgba(236,72,153,0.15)] backdrop-blur-md">
+        <!-- Decoration brand -->
+        <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-pink-500 animate-ping"></span>
+            <div class="text-[10px] font-black uppercase text-slate-300 tracking-wider">
+                🎮 <span class="text-pink-400">TAB GAMEPAD</span> ENTERPRISE SERVER MONITOR 🕹️
+            </div>
+        </div>
+
+        <!-- Mute / Emergency controls -->
+        <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <div class="text-[9px] bg-slate-950 border border-slate-800 px-2 py-1 rounded text-slate-500 font-black">
+                BACKGROUND LIVE: <span class="text-green-400">OK</span>
+            </div>
+            <button onclick="muteAllAlarms()" class="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white text-[11px] px-4 py-2 rounded-xl font-black uppercase tracking-wider border border-pink-400 shadow-[0_0_15px_rgba(219,39,119,0.35)] active:scale-95 transition-all flex items-center gap-1">
+                <i class="fa-solid fa-volume-xmark"></i> MUTE ALL SIRENS
+            </button>
+        </div>
+    </div>
+
+    <!-- Modals & Overlay alerts container -->
+    <div id="toastContainer" class="fixed bottom-20 right-4 left-4 z-50 flex flex-col gap-2 max-w-sm mx-auto"></div>
+
+    <!-- MODAL 1: ADD NEW SCREEN -->
+    <div id="addScreenModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-purple-500 w-full max-w-sm rounded-2xl p-5 relative shadow-[0_0_40px_rgba(139,92,246,0.3)]">
+            <button onclick="closeAddScreenModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-sm font-black text-slate-100 flex items-center gap-1.5 uppercase tracking-wider">
+                <i class="fa-solid fa-tv text-purple-400"></i> Add New Station Screen
+            </h3>
+            <p class="text-[10px] text-slate-400 mb-4">Nayi screen ya controller setup add karein (Jaise: S6, S7, ya VIP-1).</p>
+            
+            <form onsubmit="handleAddNewScreen(event)" class="space-y-3">
+                <div>
+                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Screen Name *</label>
+                    <input type="text" id="addScreenName" placeholder="Jaise: S6, VIP-1" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-purple-500" required>
+                </div>
+                <div>
+                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Default 1 Hour Price (₹)</label>
+                    <input type="number" id="addScreenPrice" value="50" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-emerald-400 focus:outline-none focus:border-purple-500">
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeAddScreenModal()" class="w-1/2 bg-slate-800 text-[10px] py-2.5 rounded-xl font-bold uppercase tracking-wider text-slate-300">Cancel</button>
+                    <button type="submit" class="w-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-[10px] py-2.5 rounded-xl font-bold uppercase tracking-wider text-white shadow-lg shadow-purple-600/30">Add Station</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: CUSTOM DURATION MODULE -->
+    <div id="customTimeModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-purple-500 w-full max-w-sm rounded-2xl p-5 relative shadow-[0_0_40px_rgba(139,92,246,0.3)]">
+            <button onclick="closeCustomModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-sm font-black text-slate-100 flex items-center gap-1.5 uppercase tracking-wider">
+                <i class="fa-solid fa-sliders text-purple-400 animate-spin"></i> Custom Duration Config
+            </h3>
+            <p class="text-[10px] text-slate-400 mb-4" id="customModalSubText">Configure customized playtime limits and billing rates.</p>
+            
+            <form onsubmit="handleCustomTimeStart(event)" class="space-y-3">
+                <input type="hidden" id="customModalSeatId">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Hours</label>
+                        <input type="number" id="customHours" value="1" min="0" max="24" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Minutes</label>
+                        <input type="number" id="customMinutes" value="0" min="0" max="59" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-purple-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Billing Amount (₹)</label>
+                    <input type="number" id="customRate" value="60" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-emerald-400 focus:outline-none focus:border-purple-500">
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeCustomModal()" class="w-1/2 bg-slate-800 text-[10px] py-2.5 rounded-xl font-bold uppercase tracking-wider text-slate-300">Cancel</button>
+                    <button type="submit" class="w-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-[10px] py-2.5 rounded-xl font-bold uppercase tracking-wider text-white shadow-lg shadow-purple-600/30">Start Timer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Execution Logic with Lag-Free Optimizations -->
+    <script>
+        let seats = [];
+        let logs = [];
+        
+        // Single Universal Audio Context Reference
+        let universalAudioContext = null;
+        let activeSoundOscillators = {};
+        let serviceWorkerReg = null;
+
+        window.onload = function() {
+            initApp();
+            registerBackgroundServiceWorker();
+        }
+
+        function initApp() {
+            const savedSeats = localStorage.getItem('gt_s5_seats');
+            const savedLogs = localStorage.getItem('gt_s5_logs');
+
+            if (savedSeats) {
+                seats = JSON.parse(savedSeats);
+                // Defensive check: Backport "isPaused" and "remainingMs" if they don't exist
+                seats.forEach(s => {
+                    if (s.isPaused === undefined) s.isPaused = false;
+                    if (s.remainingMs === undefined) s.remainingMs = 0;
+                });
+            } else {
+                resetDefaultSeats();
+            }
+
+            if (savedLogs) {
+                logs = JSON.parse(savedLogs);
+            }
+
+            // High Precision Tick Timer
+            setInterval(gameTimerTick, 1000);
+
+            // Render workspace grid
+            renderWorkspace();
+            renderLogsTable();
+            updateStatsSummary();
+        }
+
+        // Lazy-loading helper for shared sound system
+        function getSharedAudioContext() {
+            if (!universalAudioContext) {
+                universalAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (universalAudioContext.state === 'suspended') {
+                universalAudioContext.resume();
+            }
+            return universalAudioContext;
+        }
+
+        function resetDefaultSeats() {
+            seats = [
+                { id: 'S1', name: 'S1', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 50, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 50, isPaused: false, remainingMs: 0 },
+                { id: 'S2', name: 'S2', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 50, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 50, isPaused: false, remainingMs: 0 },
+                { id: 'S3', name: 'S3', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 50, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 50, isPaused: false, remainingMs: 0 },
+                { id: 'S4', name: 'S4', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 50, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 50, isPaused: false, remainingMs: 0 },
+                { id: 'S5', name: 'S5', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 50, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 50, isPaused: false, remainingMs: 0 }
+            ];
+            saveState();
+        }
+
+        function saveState() {
+            localStorage.setItem('gt_s5_seats', JSON.stringify(seats));
+            localStorage.setItem('gt_s5_logs', JSON.stringify(logs));
+        }
+
+        // SW Background Service Worker Setup
+        function registerBackgroundServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    let scheduledAlarms = {};
+
+                    self.addEventListener('message', function(event) {
+                        const data = event.data;
+                        if (data.action === 'schedule-alerts') {
+                            const { seatId, seatName, endTime, warningTime, targetHours } = data;
+                            
+                            if (scheduledAlarms[seatId]) {
+                                scheduledAlarms[seatId].forEach(id => clearTimeout(id));
+                            }
+                            scheduledAlarms[seatId] = [];
+
+                            const now = Date.now();
+
+                            // Warning scheduled alert (10 mins before end)
+                            const warningDelay = warningTime - now;
+                            if (warningDelay > 0) {
+                                const wId = setTimeout(() => {
+                                    self.registration.showNotification("⚠️ TAB GAMEPAD Alert: " + seatName, {
+                                        body: "Seat " + seatName + " ka " + targetHours + " ghanta complete hone me 10 min bache hain!",
+                                        vibrate: [200, 100, 200],
+                                        requireInteraction: true,
+                                        tag: "warning-" + seatId
+                                    });
+                                }, warningDelay);
+                                scheduledAlarms[seatId].push(wId);
+                            }
+
+                            // Completion scheduled alert (BOOM BOOM)
+                            const finalDelay = endTime - now;
+                            if (finalDelay > 0) {
+                                const fId = setTimeout(() => {
+                                    self.registration.showNotification("🚨 TAB GAMEPAD: Time's Up " + seatName, {
+                                        body: "Boom Boom Boom! Screen " + seatName + " ka time over ho gaya!",
+                                        vibrate: [500, 100, 500, 100, 500],
+                                        requireInteraction: true,
+                                        tag: "danger-" + seatId
+                                    });
+                                }, finalDelay);
+                                scheduledAlarms[seatId].push(fId);
+                            }
+                        } 
+                        else if (data.action === 'cancel-alerts') {
+                            const { seatId } = data;
+                            if (scheduledAlarms[seatId]) {
+                                scheduledAlarms[seatId].forEach(id => clearTimeout(id));
+                                delete scheduledAlarms[seatId];
+                            }
+                        }
+                    });
+                `;
+
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const blobURL = URL.createObjectURL(blob);
+
+                navigator.serviceWorker.register(blobURL, { scope: './' })
+                    .then(reg => {
+                        serviceWorkerReg = reg;
+                        updateNotificationStatus();
+                    }).catch(err => {
+                        console.error("SW Register Fail: ", err);
+                    });
+            }
+        }
+
+        // Post scheduling instructions to Service Worker
+        function syncAlarmsToBackground(seat) {
+            if (seat.isPaused) return; // Paused states don't get scheduled
+            if (serviceWorkerReg && serviceWorkerReg.active) {
+                const warningTime = seat.endTime - 600000; 
+                serviceWorkerReg.active.postMessage({
+                    action: 'schedule-alerts',
+                    seatId: seat.id,
+                    seatName: seat.name,
+                    endTime: seat.endTime,
+                    warningTime: warningTime,
+                    targetHours: seat.targetHours
+                });
+            }
+        }
+
+        function cancelBackgroundAlarms(seatId) {
+            if (serviceWorkerReg && serviceWorkerReg.active) {
+                serviceWorkerReg.active.postMessage({
+                    action: 'cancel-alerts',
+                    seatId: seatId
+                });
+            }
+        }
+
+        // Request Notifications
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                showToast("Notification not supported by this browser.", "warning");
+                return;
+            }
+            Notification.requestPermission().then(permission => {
+                updateNotificationStatus();
+                if (permission === "granted") {
+                    showToast("👍 Notifications activated successfully!", "success");
+                }
+            });
+        }
+
+        function updateNotificationStatus() {
+            const btn = document.getElementById('notifyBtn');
+            const icon = document.getElementById('notifyIcon');
+            const text = document.getElementById('notifyTxt');
+
+            if (!("Notification" in window)) {
+                text.innerText = "NO SUPPORT";
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                icon.className = "fa-solid fa-circle-check text-green-400";
+                text.innerText = "ALARM SYSTEM ACTIVE";
+                btn.classList.add('border-emerald-800/40', 'bg-emerald-950/20');
+            } else if (Notification.permission === "denied") {
+                icon.className = "fa-solid fa-triangle-exclamation text-red-500";
+                text.innerText = "ALARM IS BLOCKED";
+                btn.classList.add('border-red-800/40', 'bg-red-950/20');
+            }
+        }
+
+        // Mobile vibration handler
+        function triggerMobileVibration(pattern) {
+            if (typeof navigator !== 'undefined' && navigator.vibrate) {
+                try { navigator.vibrate(pattern); } catch (e) {}
+            }
+        }
+
+        // Audio synthesizer alert using Universal context loop
+        function startAudioAlert(seatId, type) {
+            stopAudioAlert(seatId);
+
+            try {
+                const ctx = getSharedAudioContext();
+                
+                if (type === 'warning') {
+                    // Soft high-pitch cyclic warning chime
+                    let interval = setInterval(() => {
+                        if (!activeSoundOscillators[seatId]) {
+                            clearInterval(interval);
+                            return;
+                        }
+                        
+                        triggerMobileVibration([100, 50, 100]);
+
+                        let osc = ctx.createOscillator();
+                        let gain = ctx.createGain();
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        
+                        osc.frequency.setValueAtTime(880, ctx.currentTime);
+                        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+                        
+                        osc.start();
+                        osc.stop(ctx.currentTime + 0.2);
+                    }, 3000);
+
+                    activeSoundOscillators[seatId] = { interval };
+                } 
+                else if (type === 'danger') {
+                    // Critical Alarm sound loop - Arcade Siren "Boom Boom Boom"
+                    let interval = setInterval(() => {
+                        if (!activeSoundOscillators[seatId]) {
+                            clearInterval(interval);
+                            return;
+                        }
+
+                        triggerMobileVibration([300, 100, 300, 100, 300]);
+
+                        for (let b = 0; b < 3; b++) {
+                            setTimeout(() => {
+                                if (!activeSoundOscillators[seatId]) return;
+                                let osc = ctx.createOscillator();
+                                let gain = ctx.createGain();
+                                osc.connect(gain);
+                                gain.connect(ctx.destination);
+                                
+                                osc.type = 'sawtooth';
+                                osc.frequency.setValueAtTime(160, ctx.currentTime);
+                                osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.4); 
+                                
+                                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                                
+                                osc.start();
+                                osc.stop(ctx.currentTime + 0.4);
+                            }, b * 350);
+                        }
+                    }, 1800);
+
+                    activeSoundOscillators[seatId] = { interval };
+                }
+            } catch (e) {
+                console.warn("Audio start prevented by browser context safety.", e);
+            }
+        }
+
+        function stopAudioAlert(seatId) {
+            if (activeSoundOscillators[seatId]) {
+                clearInterval(activeSoundOscillators[seatId].interval);
+                delete activeSoundOscillators[seatId];
+            }
+        }
+
+        // Clear warning on click
+        function acknowledgeAlarm(seatId) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat) return;
+
+            stopAudioAlert(seatId);
+
+            const now = Date.now();
+            const elapsedMinutes = Math.floor((now - seat.startTime) / 60000);
+
+            seat.acknowledgedMilestones[elapsedMinutes] = true;
+            
+            const warningMarker = (seat.targetHours * 60) - 10;
+            if (Math.abs(elapsedMinutes - warningMarker) <= 3) {
+                seat.acknowledgedMilestones[warningMarker] = true;
+            }
+
+            seat.alarmState = 'none';
+            saveState();
+            
+            // Re-render only target card
+            renderWorkspaceCard(seat);
+            updateStatsSummary();
+            showToast(`🔔 Sound alert muted for <b>${seat.name}</b>.`, "success");
+        }
+
+        function muteAllAlarms() {
+            seats.forEach(seat => {
+                if (seat.alarmState !== 'none') {
+                    acknowledgeAlarm(seat.id);
+                }
+            });
+            showToast("🔇 Sabhi active alarms ko mute kar diya gaya.", "info");
+        }
+
+        // RENDER WORKSPACE
+        function renderWorkspace() {
+            const container = document.getElementById('screensWorkspace');
+            container.innerHTML = '';
+
+            seats.forEach(seat => {
+                const card = document.createElement('div');
+                card.id = `seat-card-${seat.id}`;
+                container.appendChild(card);
+                
+                renderWorkspaceCard(seat);
+            });
+        }
+
+        // RENDER WORKSPACE CARD (Optimized updates)
+        function renderWorkspaceCard(seat) {
+            const cardEl = document.getElementById(`seat-card-${seat.id}`);
+            if (!cardEl) return;
+
+            let borderClass = "neon-card-idle";
+            let headerColor = "text-slate-500";
+            
+            if (seat.isRunning) {
+                if (seat.isPaused) {
+                    borderClass = "neon-card-paused";
+                    headerColor = "text-blue-400 font-extrabold drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]";
+                } else if (seat.alarmState === 'danger') {
+                    borderClass = "neon-card-danger";
+                    headerColor = "text-red-400 font-black animate-pulse drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]";
+                } else if (seat.alarmState === 'warning') {
+                    borderClass = "neon-card-warning";
+                    headerColor = "text-yellow-400 font-black drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]";
+                } else {
+                    borderClass = "neon-card-active";
+                    headerColor = "text-purple-400 font-extrabold drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]";
+                }
+            }
+
+            let badgeHTML = `<span class="text-[9px] font-black bg-slate-950 text-slate-500 px-2 py-1 rounded-md border border-slate-850">OFFLINE</span>`;
+            if (seat.isRunning) {
+                if (seat.isPaused) {
+                    badgeHTML = `<span class="text-[9px] font-black bg-blue-950/60 text-blue-400 px-2 py-1 rounded-md border border-blue-800/40 flex items-center gap-1"><i class="fa-solid fa-circle-pause animate-pulse"></i> PAUSED</span>`;
+                } else if (seat.alarmState === 'danger') {
+                    badgeHTML = `<span class="text-[9px] font-black bg-red-950/60 text-red-400 px-2 py-1 rounded-md border border-red-800/40 flex items-center gap-1"><i class="fa-solid fa-radiation animate-spin text-red-500"></i> TIME UP</span>`;
+                } else if (seat.alarmState === 'warning') {
+                    badgeHTML = `<span class="text-[9px] font-black bg-yellow-950/60 text-yellow-400 px-2 py-1 rounded-md border border-yellow-800/40 flex items-center gap-1"><i class="fa-solid fa-hourglass-start animate-bounce"></i> 10M ALERT</span>`;
+                } else {
+                    badgeHTML = `<span class="text-[9px] font-black bg-purple-950/60 text-purple-400 px-2 py-1 rounded-md border border-purple-800/40">PLAYING</span>`;
+                }
+            }
+
+            let bodyHTML = "";
+            if (!seat.isRunning) {
+                const price1Hr = seat.basePricePerHour || 50;
+                const price2Hr = Math.round(price1Hr * 1.8);
+
+                bodyHTML = `
+                    <div class="my-2">
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="quickStartSeat('${seat.id}', 1)" class="bg-gradient-to-tr from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 active:scale-95 text-xs text-white py-3 rounded-xl font-black transition-all shadow-md">
+                                1 Ghanta
+                                <span class="block text-[8px] font-normal opacity-70">₹${price1Hr}</span>
+                            </button>
+                            <button onclick="quickStartSeat('${seat.id}', 2)" class="bg-gradient-to-tr from-pink-700 to-rose-600 hover:from-pink-600 hover:to-rose-500 active:scale-95 text-xs text-white py-3 rounded-xl font-black transition-all shadow-md">
+                                2 Ghante
+                                <span class="block text-[8px] font-normal opacity-70">₹${price2Hr}</span>
+                            </button>
+                        </div>
+                        <button onclick="openCustomModal('${seat.id}')" class="w-full mt-2 bg-slate-950 hover:bg-slate-800 text-[10px] text-slate-400 hover:text-white py-2 rounded-xl transition-all border border-slate-800/50 font-bold uppercase tracking-widest">
+                            <i class="fa-solid fa-sliders text-purple-500"></i> Setup Custom
+                        </button>
+                    </div>
+                `;
+            } else {
+                const now = Date.now();
+                // If paused, read remainingMs directly; else calculate dynamic remaining time
+                const timeLeft = seat.isPaused ? seat.remainingMs : Math.max(0, seat.endTime - now);
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                const formattedTimer = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                let hourTabsHTML = "";
+                [1, 2, 3, 4].forEach(hr => {
+                    const isCurrentTarget = seat.targetHours === hr;
+                    let btnStyle = "bg-slate-950 text-slate-400 hover:bg-slate-800";
+                    if (isCurrentTarget) {
+                        btnStyle = seat.isPaused 
+                            ? "bg-blue-600 text-white font-black shadow-[0_0_10px_rgba(59,130,246,0.4)]" 
+                            : "bg-purple-600 text-white font-black shadow-[0_0_10px_rgba(168,85,247,0.4)]";
+                    }
+                    hourTabsHTML += `<button onclick="changeTargetHour('${seat.id}', ${hr})" class="py-1 rounded-lg border border-slate-800 text-[10px] transition-all font-black ${btnStyle}">${hr}H</button>`;
+                });
+
+                bodyHTML = `
+                    <div class="my-2 flex flex-col justify-between flex-grow">
+                        <div class="bg-slate-950 rounded-xl p-2.5 text-center border border-slate-850 shadow-inner">
+                            <div class="text-2xl font-black tracking-widest font-mono ${seat.isPaused ? 'text-blue-400' : 'text-purple-400'}" id="raw-timer-${seat.id}">${formattedTimer}</div>
+                            <div class="flex justify-between text-[8px] font-bold text-slate-500 uppercase tracking-wider mt-1 border-t border-slate-900/60 pt-1">
+                                <span>Target: <b>${seat.targetHours}H</b></span>
+                                <span>Billing: <b class="text-emerald-400 font-black">₹${seat.rate}</b></span>
+                            </div>
+                        </div>
+
+                        <div class="mt-2">
+                            <p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1">Shift Target Milestone</p>
+                            <div class="grid grid-cols-4 gap-1">
+                                ${hourTabsHTML}
+                            </div>
+                        </div>
+
+                        ${seat.alarmState !== 'none' ? `
+                            <div class="mt-2">
+                                <button onclick="acknowledgeAlarm('${seat.id}')" class="w-full bg-gradient-to-r from-red-600 to-pink-600 text-white text-[11px] font-black uppercase py-2.5 rounded-xl flex items-center justify-center gap-1.5 animate-bounce shadow-lg">
+                                    <i class="fa-solid fa-volume-xmark"></i> MUTE SIREN
+                                </button>
+                            </div>
+                        ` : ''}
+
+                        <!-- Action Controls Row for Pause/Resume Feature -->
+                        <div class="mt-2.5 flex gap-2">
+                            ${seat.isPaused ? `
+                                <button onclick="resumeSeatSession('${seat.id}')" class="w-1/2 bg-gradient-to-tr from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white text-[10px] py-2 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-play animate-pulse"></i> Resume
+                                </button>
+                            ` : `
+                                <button onclick="pauseSeatSession('${seat.id}')" class="w-1/2 bg-yellow-600/10 hover:bg-yellow-600/30 hover:text-yellow-400 border border-yellow-500/20 text-yellow-500 text-[10px] py-2 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-pause"></i> Pause (Light)
+                                </button>
+                            `}
+                            <button onclick="stopSeatSession('${seat.id}', true)" class="w-1/2 bg-red-950/20 hover:bg-red-950 hover:text-red-400 border border-red-900/40 text-red-500 text-[10px] py-2 rounded-xl font-black uppercase tracking-widest">
+                                🛑 Stop
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            cardEl.className = `${borderClass} glass-hud p-4 rounded-2xl relative flex flex-col justify-between min-h-[225px] shadow-2xl`;
+            cardEl.innerHTML = `
+                <div class="flex justify-between items-center pb-2 border-b border-slate-800/40">
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-desktop text-[11px] ${seat.isPaused ? 'text-blue-500 animate-pulse' : 'text-purple-500'}"></i>
+                        <span class="text-md font-black uppercase ${headerColor} tracking-wider">${seat.name}</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-1.5">
+                        ${badgeHTML}
+                        ${!['S1','S2','S3','S4','S5'].includes(seat.id) ? `
+                            <button onclick="deleteCustomScreen('${seat.id}')" class="text-slate-600 hover:text-red-500 transition-all text-[11px] ml-1.5" title="Screen Delete">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="flex-grow flex flex-col justify-between mt-1.5">
+                    ${bodyHTML}
+                </div>
+            `;
+        }
+
+        // HIGH PRECISION TIMER TICK (Lag-free)
+        function gameTimerTick() {
+            const now = Date.now();
+            let stateModified = false;
+
+            seats.forEach(seat => {
+                if (seat.isRunning) {
+                    if (seat.isPaused) {
+                        // Keep UI clock frozen and skip background warning timers
+                        const timerEl = document.getElementById(`raw-timer-${seat.id}`);
+                        if (timerEl) {
+                            const timeLeft = seat.remainingMs;
+                            const h = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                            const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                            timerEl.innerText = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                            timerEl.className = "text-2xl font-black tracking-widest font-mono text-blue-400 animate-pulse";
+                        }
+                        return; // Skip normal alerts processing for paused items
+                    }
+
+                    const elapsedMinutes = Math.floor((now - seat.startTime) / 60000);
+                    const totalMinsLimit = seat.initialDuration;
+                    const warningMinuteMarker = totalMinsLimit - 10;
+                    
+                    // 1. WARNING Trigger
+                    if (elapsedMinutes >= warningMinuteMarker && elapsedMinutes < totalMinsLimit) {
+                        if (!seat.acknowledgedMilestones[warningMinuteMarker] && seat.alarmState !== 'warning') {
+                            seat.alarmState = 'warning';
+                            stateModified = true;
+                            startAudioAlert(seat.id, 'warning');
+                            showToast(`⚠️ Alert! Station <b>${seat.name}</b> ke play limits me sirf 10 min bache hain!`, "warning");
+                        }
+                    }
+
+                    // 2. CRITICAL SIREN Trigger
+                    if (elapsedMinutes >= totalMinsLimit) {
+                        if (!seat.acknowledgedMilestones[totalMinsLimit] && seat.alarmState !== 'danger') {
+                            seat.alarmState = 'danger';
+                            stateModified = true;
+                            startAudioAlert(seat.id, 'danger');
+                            showToast(`🚨 BOOM BOOM! Screen <b>${seat.name}</b> ka game complete ho gaya!`, "danger");
+                        }
+                    }
+
+                    // Dynamic text countdown clock refresh
+                    const timerEl = document.getElementById(`raw-timer-${seat.id}`);
+                    if (timerEl) {
+                        const timeLeft = Math.max(0, seat.endTime - now);
+                        const h = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                        const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                        
+                        timerEl.innerText = timeLeft <= 0 ? "BOM! TIME UP" : `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                        
+                        if (timeLeft <= 0) {
+                            timerEl.className = "text-2xl font-black tracking-widest font-mono text-red-500 animate-pulse";
+                        } else if (timeLeft <= 600000) {
+                            timerEl.className = "text-2xl font-black tracking-widest font-mono text-yellow-400";
+                        } else {
+                            timerEl.className = "text-2xl font-black tracking-widest font-mono text-purple-400";
+                        }
+                    }
+                }
+            });
+
+            if (stateModified) {
+                saveState();
+                renderWorkspace();
+                updateStatsSummary();
+            }
+        }
+
+        // PAUSE TIMER (Power Cut Security)
+        function pauseSeatSession(seatId) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat || !seat.isRunning || seat.isPaused) return;
+
+            stopAudioAlert(seatId);
+            cancelBackgroundAlarms(seatId);
+
+            const now = Date.now();
+            seat.remainingMs = Math.max(0, seat.endTime - now);
+            seat.isPaused = true;
+            seat.alarmState = 'none';
+
+            saveState();
+            renderWorkspaceCard(seat);
+            updateStatsSummary();
+            
+            triggerMobileVibration([100, 100]);
+            showToast(`🔌 Light chali gayi! Seat <b>${seat.name}</b> ka timer <b>PAUSED</b> (surakshit) hai.`, "warning");
+        }
+
+        // RESUME TIMER (Power Restored)
+        function resumeSeatSession(seatId) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat || !seat.isRunning || !seat.isPaused) return;
+
+            const now = Date.now();
+            seat.endTime = now + seat.remainingMs;
+            // Shifting start time forward relative to the freeze gap to preserve billing metrics integrity
+            seat.startTime = seat.endTime - (seat.initialDuration * 60000);
+            seat.isPaused = false;
+
+            saveState();
+            syncAlarmsToBackground(seat);
+
+            renderWorkspaceCard(seat);
+            updateStatsSummary();
+
+            triggerMobileVibration([150, 50, 150]);
+            showToast(`💡 Light aa gayi! Seat <b>${seat.name}</b> ka timer fir se <b>RESUMED</b> hai.`, "success");
+        }
+
+        // ADD NEW STATION
+        function openAddScreenModal() {
+            document.getElementById('addScreenModal').classList.remove('hidden');
+            document.getElementById('addScreenName').focus();
+        }
+
+        function closeAddScreenModal() {
+            document.getElementById('addScreenModal').classList.add('hidden');
+            document.getElementById('addScreenName').value = '';
+        }
+
+        function handleAddNewScreen(e) {
+            e.preventDefault();
+            const name = document.getElementById('addScreenName').value.trim().toUpperCase();
+            const price = parseInt(document.getElementById('addScreenPrice').value) || 50;
+
+            if (!name) return;
+
+            if (seats.some(s => s.name === name)) {
+                showToast(`Screen <b>${name}</b> pehle se hi setup me shamil hai!`, "danger");
+                return;
+            }
+
+            const newSeat = {
+                id: 'Seat-' + Date.now(),
+                name: name,
+                isRunning: false,
+                startTime: null,
+                endTime: null,
+                targetHours: 1,
+                initialDuration: 60,
+                rate: price,
+                alarmState: 'none',
+                acknowledgedMilestones: {},
+                basePricePerHour: price,
+                isPaused: false,
+                remainingMs: 0
+            };
+
+            seats.push(newSeat);
+            saveState();
+            
+            renderWorkspace();
+            updateStatsSummary();
+            closeAddScreenModal();
+            showToast(`🎉 Nayi Screen <b>${name}</b> setup dashboard me add ho chuki hai!`, "success");
+        }
+
+        // Delete Custom added screens
+        function deleteCustomScreen(seatId) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat) return;
+
+            const check = confirm(`Kya aap sach me screen ${seat.name} ko delete karna chahte hain?`);
+            if (check) {
+                stopAudioAlert(seatId);
+                cancelBackgroundAlarms(seatId);
+                seats = seats.filter(s => s.id !== seatId);
+                saveState();
+                renderWorkspace();
+                updateStatsSummary();
+                showToast(`🗑️ Screen deleted.`, "info");
+            }
+        }
+
+        // Quick Launch Button handler
+        function quickStartSeat(seatId, hours) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat) return;
+
+            const baseRate = seat.basePricePerHour || 50;
+            const durationMinutes = hours * 60;
+            
+            let finalRate = baseRate;
+            if (hours === 2) finalRate = Math.round(baseRate * 1.8);
+            if (hours === 3) finalRate = Math.round(baseRate * 2.6);
+            if (hours === 4) finalRate = Math.round(baseRate * 3.2);
+
+            const now = Date.now();
+
+            seat.isRunning = true;
+            seat.startTime = now;
+            seat.endTime = now + (durationMinutes * 60 * 1000);
+            seat.targetHours = hours;
+            seat.initialDuration = durationMinutes;
+            seat.rate = finalRate;
+            seat.alarmState = 'none';
+            seat.acknowledgedMilestones = {};
+            seat.isPaused = false;
+            seat.remainingMs = durationMinutes * 60 * 1000;
+
+            saveState();
+            syncAlarmsToBackground(seat);
+
+            renderWorkspaceCard(seat);
+            updateStatsSummary();
+            
+            triggerMobileVibration([150, 50, 150]);
+            showToast(`🚀 Screen <b>${seat.name}</b> active! Target: <b>${hours} Ghanta</b>.`, "success");
+        }
+
+        // Change target
+        function changeTargetHour(seatId, newHours) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat || !seat.isRunning) return;
+
+            stopAudioAlert(seatId);
+
+            const baseRate = seat.basePricePerHour || 50;
+            const newTotalDurationMinutes = newHours * 60;
+
+            seat.targetHours = newHours;
+            seat.initialDuration = newTotalDurationMinutes;
+            seat.endTime = seat.startTime + (newTotalDurationMinutes * 60 * 1000);
+            seat.alarmState = 'none';
+            
+            let updatedCost = baseRate;
+            if (newHours === 2) updatedCost = Math.round(baseRate * 1.8);
+            if (newHours === 3) updatedCost = Math.round(baseRate * 2.6);
+            if (newHours === 4) updatedCost = Math.round(baseRate * 3.2);
+            seat.rate = updatedCost;
+
+            seat.acknowledgedMilestones = {};
+
+            // Update remaining milliseconds parameter based on new configurations
+            const now = Date.now();
+            seat.remainingMs = Math.max(0, seat.endTime - now);
+
+            saveState();
+            syncAlarmsToBackground(seat);
+
+            renderWorkspaceCard(seat);
+            updateStatsSummary();
+            showToast(`⏱️ ${seat.name} target configuration changed to <b>${newHours} Ghante</b>.`, "info");
+        }
+
+        // End Play and Reset Card
+        function stopSeatSession(seatId, addToHistory = true) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat) return;
+
+            stopAudioAlert(seatId);
+            cancelBackgroundAlarms(seatId);
+
+            const now = Date.now();
+
+            if (addToHistory && seat.isRunning) {
+                let actualElapsedMinutes = seat.initialDuration;
+                
+                // Smart calculation for elapsed play time in case stopped prematurely
+                if (seat.isPaused) {
+                    const spentMs = (seat.initialDuration * 60000) - seat.remainingMs;
+                    actualElapsedMinutes = Math.max(1, Math.round(spentMs / 60000));
+                } else if (seat.endTime && (seat.endTime > now)) {
+                    const totalMs = seat.initialDuration * 60000;
+                    const remainingMs = seat.endTime - now;
+                    const spentMs = totalMs - remainingMs;
+                    actualElapsedMinutes = Math.max(1, Math.round(spentMs / 60000));
+                }
+                
+                const logItem = {
+                    id: 'log-' + Date.now(),
+                    seatName: seat.name,
+                    duration: actualElapsedMinutes,
+                    amount: seat.rate,
+                    timestamp: new Date().toLocaleTimeString('en-IN', { hour12: true })
+                };
+
+                logs.push(logItem);
+            }
+
+            seat.isRunning = false;
+            seat.startTime = null;
+            seat.endTime = null;
+            seat.alarmState = 'none';
+            seat.acknowledgedMilestones = {};
+            seat.isPaused = false;
+            seat.remainingMs = 0;
+
+            saveState();
+            renderWorkspaceCard(seat);
+            renderLogsTable();
+            updateStatsSummary();
+            showToast(`🛑 Play ended. Console <b>${seat.name}</b> has been cleared.`, "info");
+        }
+
+        // Custom time dialog handlers
+        function openCustomModal(seatId) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat) return;
+
+            document.getElementById('customModalSeatId').value = seatId;
+            document.getElementById('customModalSubText').innerText = `Setup manual countdown specifications for Station ${seat.name}.`;
+            document.getElementById('customRate').value = seat.basePricePerHour;
+            document.getElementById('customTimeModal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customTimeModal').classList.add('hidden');
+            document.getElementById('customHours').value = '1';
+            document.getElementById('customMinutes').value = '0';
+        }
+
+        function handleCustomTimeStart(e) {
+            e.preventDefault();
+            const id = document.getElementById('customModalSeatId').value;
+            const h = parseInt(document.getElementById('customHours').value) || 0;
+            const m = parseInt(document.getElementById('customMinutes').value) || 0;
+            const rate = parseFloat(document.getElementById('customRate').value) || 0;
+
+            const totalMins = (h * 60) + m;
+
+            if (totalMins <= 0) {
+                showToast("1 minut se upar ka time specify karein.", "warning");
+                return;
+            }
+
+            const seat = seats.find(s => s.id === id);
+            if (seat) {
+                const now = Date.now();
+
+                seat.isRunning = true;
+                seat.startTime = now;
+                seat.endTime = now + (totalMins * 60000);
+                seat.targetHours = Math.ceil(totalMins / 60);
+                seat.initialDuration = totalMins;
+                seat.rate = rate;
+                seat.alarmState = 'none';
+                seat.acknowledgedMilestones = {};
+                seat.isPaused = false;
+                seat.remainingMs = totalMins * 60000;
+
+                saveState();
+                syncAlarmsToBackground(seat);
+
+                renderWorkspaceCard(seat);
+                updateStatsSummary();
+                closeCustomModal();
+                showToast("🚀 Custom play started successfully.", "success");
+            }
+        }
+
+        function renderLogsTable() {
+            const tbody = document.getElementById('logsTableBody');
+            tbody.innerHTML = '';
+
+            let totalEarnings = 0;
+
+            if (logs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="p-3 text-center text-slate-500 font-bold italic">Bahi khata registry is currently empty.</td>
+                    </tr>
+                `;
+                document.getElementById('earningSum').innerText = "0";
+                return;
+            }
+
+            const reversedLogs = [...logs].reverse();
+            reversedLogs.forEach(log => {
+                totalEarnings += Number(log.amount);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/40 text-slate-300 transition-all border-b border-slate-900/60";
+                tr.innerHTML = `
+                    <td class="p-2.5 font-black text-purple-400">${log.seatName}</td>
+                    <td class="p-2.5 font-bold">${log.duration} Mins</td>
+                    <td class="p-2.5 text-emerald-400 font-black">₹${log.amount}</td>
+                    <td class="p-2.5 text-right text-slate-500 font-mono text-[9px]">${log.timestamp}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('earningSum').innerText = totalEarnings;
+        }
+
+        function updateStatsSummary() {
+            let active = 0;
+            let warns = 0;
+            let dangerAlerts = 0;
+
+            seats.forEach(seat => {
+                if (seat.isRunning) {
+                    active++;
+                    if (seat.alarmState === 'warning') warns++;
+                    if (seat.alarmState === 'danger') dangerAlerts++;
+                }
+            });
+
+            document.getElementById('activeCounter').innerText = active;
+            document.getElementById('warningCounter').innerText = warns;
+            document.getElementById('alarmCounter').innerText = dangerAlerts;
+        }
+
+        function clearLogs() {
+            const check = confirm("Kya aap sach me complete audit logs register ko reset karna chahte hain?");
+            if (check) {
+                logs = [];
+                saveState();
+                renderLogsTable();
+                updateStatsSummary();
+                showToast("🧹 Registry book reset complete.", "info");
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let colorTheme = "bg-slate-900 border-slate-800 text-slate-100";
+            let icon = "fa-solid fa-bell text-purple-400";
+
+            if (type === 'success') {
+                colorTheme = "bg-green-950 border-green-800 text-green-100 shadow-[0_0_15px_rgba(34,197,94,0.15)]";
+                icon = "fa-solid fa-circle-check text-green-400";
+            } else if (type === 'warning') {
+                colorTheme = "bg-yellow-950 border-yellow-800 text-yellow-100 shadow-[0_0_15px_rgba(234,179,8,0.2)]";
+                icon = "fa-solid fa-triangle-exclamation text-yellow-400 animate-pulse";
+            } else if (type === 'danger') {
+                colorTheme = "bg-red-950 border-red-800 text-red-100 shadow-[0_0_20px_rgba(239,68,68,0.25)]";
+                icon = "fa-solid fa-circle-exclamation text-red-400";
+            }
+
+            toast.className = `p-3 rounded-2xl border flex items-start gap-2 shadow-xl transition-all duration-300 transform translate-y-5 opacity-0 ${colorTheme}`;
+            toast.innerHTML = `
+                <div class="text-xs mt-0.5"><i class="${icon}"></i></div>
+                <div class="flex-grow text-[10px] font-bold leading-relaxed">${message}</div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white transition-all"><i class="fa-solid fa-xmark text-xs"></i></button>
+            `;
+
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-x-5', 'opacity-0');
+                toast.classList.add('translate-x-0', 'opacity-100');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-x-0', 'opacity-100');
+                toast.classList.add('translate-x-5', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
