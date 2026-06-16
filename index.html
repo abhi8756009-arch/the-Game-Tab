@@ -307,11 +307,18 @@
                     const lastResultIndex = event.results.length - 1;
                     let transcript = event.results[lastResultIndex][0].transcript.toLowerCase().trim();
                     console.log("🗣️ Voice Heard:", transcript);
+                    showToast(`🗣️ AI Heard: "${transcript}"`, "info"); // User ko dikhane ke liye ki AI ne kya suna
                     parseVoiceCommand(transcript);
                 };
 
                 speechRecognition.onerror = (event) => {
                     console.warn("Speech Recognition Error:", event.error);
+                    if (event.error === 'not-allowed') {
+                        showToast("⚠️ Mic permission denied! Browser settings me ja kar Microphone Allow karein.", "danger");
+                        isVoiceListening = false;
+                        autoRestartVoice = false;
+                        updateVoiceUIIcon(false);
+                    }
                 };
 
                 speechRecognition.onend = () => {
@@ -382,15 +389,17 @@
             // Target Seat Finder Logic
             let targetSeat = null;
             seats.forEach(s => {
-                // Make name regex friendly, eg 'S1' matches 's1', 's 1', 'एस 1', 'एस वन', 'ace 1'
-                const rawStr = s.name.toLowerCase();
-                const numericPart = rawStr.replace(/\D/g, ''); 
+                const numericPart = s.name.replace(/\D/g, ''); 
                 
-                if (text.includes(rawStr) || 
-                    text.includes(`s ${numericPart}`) || 
-                    text.includes(`s${numericPart}`) || 
-                    text.includes(`एस ${numericPart}`) ||
-                    text.includes(`ace ${numericPart}`)) {
+                // Smart phonetic dictionary so it catches bad pronunciation
+                const matchers = [
+                    s.name.toLowerCase(), 
+                    `s ${numericPart}`, `s${numericPart}`, `एस ${numericPart}`, 
+                    `ace ${numericPart}`, `seat ${numericPart}`, `screen ${numericPart}`, 
+                    `station ${numericPart}`, `yes ${numericPart}`, `is ${numericPart}`, `as ${numericPart}`
+                ];
+                
+                if (matchers.some(m => text.includes(m))) {
                     targetSeat = s.id;
                 }
             });
@@ -399,16 +408,17 @@
 
             // Action Finder
             let action = null;
-            if (text.includes('start') || text.includes('shuru') || text.includes('chalu') || text.includes('set') || text.includes('laga do')) action = 'start';
+            if (text.includes('start') || text.includes('shuru') || text.includes('chalu') || text.includes('set') || text.includes('laga')) action = 'start';
             else if (text.includes('stop') || text.includes('khatam') || text.includes('band')) action = 'stop';
             else if (text.includes('pause') || text.includes('rok')) action = 'pause';
             else if (text.includes('resume') || text.includes('wapas') || text.includes('continue')) action = 'resume';
 
-            // Hours Parser (Default 1 hr)
+            // Hours Parser (Added 30 minutes support)
             let hours = 1;
-            if (text.match(/2\s*(hour|ghant|घंट)/i) || text.match(/do\s*ghant|two\s*hour/i)) hours = 2;
-            if (text.match(/3\s*(hour|ghant|घंट)/i) || text.match(/teen\s*ghant|three\s*hour/i)) hours = 3;
-            if (text.match(/4\s*(hour|ghant|घंट)/i) || text.match(/char\s*ghant|four\s*hour/i)) hours = 4;
+            if (text.match(/30\s*min/i) || text.match(/aadha/i) || text.match(/half/i) || text.match(/tis min/i) || text.match(/तीस मिनट/i)) hours = 0.5;
+            else if (text.match(/2\s*(hour|ghant|घंट)/i) || text.match(/do\s*ghant|two\s*hour/i)) hours = 2;
+            else if (text.match(/3\s*(hour|ghant|घंट)/i) || text.match(/teen\s*ghant|three\s*hour/i)) hours = 3;
+            else if (text.match(/4\s*(hour|ghant|घंट)/i) || text.match(/char\s*ghant|four\s*hour/i)) hours = 4;
 
             // Execute mapped action
             let commandSuccess = false;
@@ -569,9 +579,10 @@
             if (!seat.isRunning) {
                 bodyHTML = `
                     <div class="my-3">
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="quickStartSeat('${seat.id}', 1)" class="bg-white/5 hover:bg-white/10 active:scale-95 text-xs text-white py-3.5 rounded-xl font-bold transition-all border border-white/10">1 Hour</button>
-                            <button onclick="quickStartSeat('${seat.id}', 2)" class="bg-white/5 hover:bg-white/10 active:scale-95 text-xs text-white py-3.5 rounded-xl font-bold transition-all border border-white/10">2 Hours</button>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="quickStartSeat('${seat.id}', 0.5)" class="bg-white/5 hover:bg-white/10 active:scale-95 text-[10px] text-white py-3.5 rounded-xl font-bold transition-all border border-white/10">30 Min</button>
+                            <button onclick="quickStartSeat('${seat.id}', 1)" class="bg-white/5 hover:bg-white/10 active:scale-95 text-[10px] text-white py-3.5 rounded-xl font-bold transition-all border border-white/10">1 Hour</button>
+                            <button onclick="quickStartSeat('${seat.id}', 2)" class="bg-white/5 hover:bg-white/10 active:scale-95 text-[10px] text-white py-3.5 rounded-xl font-bold transition-all border border-white/10">2 Hours</button>
                         </div>
                         <button onclick="openCustomModal('${seat.id}')" class="w-full mt-2.5 bg-transparent hover:bg-white/5 text-[9px] text-slate-400 hover:text-white py-2.5 rounded-xl transition-all font-bold uppercase tracking-widest">
                             <i class="fa-solid fa-sliders text-yellow-600"></i> Custom Setup
@@ -587,13 +598,14 @@
                 const formattedTimer = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
                 let hourTabsHTML = "";
-                [1, 2, 3, 4].forEach(hr => {
+                [0.5, 1, 2, 3].forEach(hr => {
                     const isCurrentTarget = seat.targetHours === hr;
                     let btnStyle = "bg-transparent text-slate-500 border-white/10 hover:text-white";
                     if (isCurrentTarget) {
                         btnStyle = seat.isPaused ? "bg-blue-600/20 text-blue-400 border-blue-500/50 shadow-[0_0_10px_rgba(59,130,246,0.3)]" : "bg-yellow-600/20 gold-text border-yellow-500/50 shadow-[0_0_15px_rgba(212,175,55,0.2)]";
                     }
-                    hourTabsHTML += `<button onclick="changeTargetHour('${seat.id}', ${hr})" class="py-1 rounded border text-[10px] font-bold transition-all ${btnStyle}">${hr}H</button>`;
+                    const label = hr === 0.5 ? "30m" : `${hr}H`;
+                    hourTabsHTML += `<button onclick="changeTargetHour('${seat.id}', ${hr})" class="py-1 rounded border text-[10px] font-bold transition-all ${btnStyle}">${label}</button>`;
                 });
 
                 bodyHTML = `
@@ -601,7 +613,7 @@
                         <div class="bg-black/40 rounded-xl p-3 text-center border border-white/5 shadow-inner relative">
                             <div class="text-3xl font-luxury font-black tracking-widest ${seat.isPaused ? 'text-blue-400' : 'gold-text'} drop-shadow-md" id="raw-timer-${seat.id}">${formattedTimer}</div>
                             <div class="text-[7px] font-black text-slate-500 uppercase tracking-widest mt-1.5 pt-1.5 border-t border-white/5">
-                                Set Target: ${seat.targetHours}H
+                                Set Target: ${seat.targetHours === 0.5 ? '30m' : seat.targetHours + 'H'}
                             </div>
                         </div>
 
