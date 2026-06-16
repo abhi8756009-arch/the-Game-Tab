@@ -92,10 +92,17 @@
             100% { box-shadow: 0 0 35px rgba(220, 38, 38, 0.85), inset 0 0 15px rgba(220, 38, 38, 0.3); transform: scale(1.025); }
         }
 
+        /* Pulsing Voice Mic Ring Animation */
+        .pulse-voice-ring {
+            position: absolute; border-radius: 50%; border: 2px solid #f59e0b;
+            width: 100%; height: 100%; top: 0; left: 0; animation: wave-ring-pulse 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        @keyframes wave-ring-pulse { 75%, 100% { transform: scale(2); opacity: 0; } }
+
         /* Sleek custom scrollbars */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: rgba(10, 18, 45, 0.3); }
-        ::-webkit-scrollbar-thumb { background: #b38728; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #bf953f; border-radius: 4px; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -123,6 +130,17 @@
 
             <!-- Dashboard Global Operations -->
             <div class="flex flex-wrap items-center gap-2">
+                <!-- Royal Voice Controller Toggle Button -->
+                <button id="aiVoiceBtn" onclick="toggleContinuousVoiceAI()" class="relative bg-indigo-950/80 hover:bg-black text-[10px] px-4 py-3 rounded-full font-black uppercase tracking-wider flex items-center gap-2.5 border border-amber-500/20 shadow-lg active:scale-95 transition-all">
+                    <div id="aiVoiceRing" class="hidden pulse-voice-ring"></div>
+                    <span class="relative flex h-2 w-2">
+                        <span id="aiVoiceStatusDot" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-500 opacity-75"></span>
+                        <span id="aiVoiceStatusDotInner" class="relative inline-flex rounded-full h-2 w-2 bg-slate-500"></span>
+                    </span>
+                    <i id="aiVoiceIcon" class="fa-solid fa-microphone-slash text-slate-400"></i>
+                    <span id="aiVoiceTxt" class="text-slate-300">MILO AI VOICE: STANDBY</span>
+                </button>
+
                 <!-- System Push Notifications -->
                 <button id="notifyBtn" onclick="requestNotificationPermission()" class="bg-indigo-950/60 hover:bg-indigo-900 text-slate-300 text-[10px] px-4 py-3 rounded-full font-bold uppercase tracking-wider flex items-center gap-2 border border-amber-500/20 shadow-md">
                     <i id="notifyIcon" class="fa-solid fa-bell text-amber-500"></i>
@@ -143,6 +161,93 @@
 
     <!-- Main Workspace Dashboard -->
     <main class="max-w-7xl w-full mx-auto p-4 flex-grow pb-28">
+
+        <!-- MILO AI VOICE CONSOLE & COMMANDS GUIDE PANEL -->
+        <section class="mb-6 royal-glass-card rounded-2xl border border-amber-500/20 p-4 shadow-xl">
+            <div class="flex items-center justify-between pb-3 border-b border-white/5">
+                <h3 class="text-[11px] font-black text-amber-500 uppercase tracking-widest flex items-center gap-2">
+                    <i class="fa-solid fa-brain animate-pulse"></i> Royal Milo AI Voice Console
+                </h3>
+                <span class="text-[8px] text-slate-400 font-bold uppercase tracking-widest bg-indigo-950/60 border border-white/5 px-2.5 py-1 rounded" id="miloStatusLabel">System Ready</span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                <div class="bg-black/40 rounded-xl p-3 border border-white/5">
+                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Milo Heard:</span>
+                    <p class="text-xs font-semibold text-slate-300 mt-1 italic" id="voiceHeardText">"Waiting for command... Speech Engine Off"</p>
+                </div>
+                <div class="bg-black/40 rounded-xl p-3 border border-white/5">
+                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Command Action Outcome:</span>
+                    <p class="text-xs font-bold text-amber-400 mt-1 uppercase tracking-wider" id="voiceResultText">NONE</p>
+                </div>
+            </div>
+
+            <!-- COLLAPSIBLE VOICE COMMANDS INDEXED GUIDE -->
+            <div class="mt-4 border-t border-white/5 pt-3">
+                <details class="group cursor-pointer">
+                    <summary class="text-[10px] font-extrabold text-slate-300 hover:text-amber-400 uppercase tracking-wider flex items-center justify-between list-none">
+                        <span><i class="fa-solid fa-book-open text-amber-500 mr-1.5"></i> Milo AI Voice Command Guide (Show Commands Index)</span>
+                        <i class="fa-solid fa-chevron-down text-[8px] transition-transform group-open:rotate-180"></i>
+                    </summary>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-3 text-[10px] leading-relaxed text-slate-400">
+                        <div class="bg-indigo-950/30 p-2.5 rounded-xl border border-white/5">
+                            <h4 class="font-extrabold text-slate-200 uppercase mb-1 border-b border-white/5 pb-1 text-[9px] text-amber-500/80">1. Start Timer (S1 - S9)</h4>
+                            <p class="italic mb-1">Commands (English / Hindi):</p>
+                            <ul class="list-disc pl-3.5 space-y-0.5">
+                                <li>"Start S1 for 1 hour"</li>
+                                <li>"S2 chalu karo do ghanta"</li>
+                                <li>"Start S3 30 minutes 2 players"</li>
+                            </ul>
+                        </div>
+                        <div class="bg-indigo-950/30 p-2.5 rounded-xl border border-white/5">
+                            <h4 class="font-extrabold text-slate-200 uppercase mb-1 border-b border-white/5 pb-1 text-[9px] text-amber-500/80">2. Stop Timer (S1 - S9)</h4>
+                            <p class="italic mb-1">Commands (English / Hindi):</p>
+                            <ul class="list-disc pl-3.5 space-y-0.5">
+                                <li>"Stop timer for S1"</li>
+                                <li>"S2 band kar do"</li>
+                                <li>"S3 stop reset"</li>
+                            </ul>
+                        </div>
+                        <div class="bg-indigo-950/30 p-2.5 rounded-xl border border-white/5">
+                            <h4 class="font-extrabold text-slate-200 uppercase mb-1 border-b border-white/5 pb-1 text-[9px] text-amber-500/80">3. Mute Siren (S1 - S9)</h4>
+                            <p class="italic mb-1">Commands (English / Hindi):</p>
+                            <ul class="list-disc pl-3.5 space-y-0.5">
+                                <li>"Mute alarm for S1"</li>
+                                <li>"S2 silent"</li>
+                                <li>"S3 alarm band"</li>
+                            </ul>
+                        </div>
+                        <div class="bg-indigo-950/30 p-2.5 rounded-xl border border-white/5">
+                            <h4 class="font-extrabold text-slate-200 uppercase mb-1 border-b border-white/5 pb-1 text-[9px] text-amber-500/80">4. Pause & Resume (S1 - S9)</h4>
+                            <p class="italic mb-1">Commands (English / Hindi):</p>
+                            <ul class="list-disc pl-3.5 space-y-0.5">
+                                <li>"Pause S1 timer" / "S1 pause karo"</li>
+                                <li>"Resume S1 timer" / "S1 resume"</li>
+                                <li>"S2 continue play"</li>
+                            </ul>
+                        </div>
+                        <div class="bg-indigo-950/30 p-2.5 rounded-xl border border-white/5">
+                            <h4 class="font-extrabold text-slate-200 uppercase mb-1 border-b border-white/5 pb-1 text-[9px] text-amber-500/80">5. Add Extra Time (S1 - S9)</h4>
+                            <p class="italic mb-1">Commands (English / Hindi):</p>
+                            <ul class="list-disc pl-3.5 space-y-0.5">
+                                <li>"Add extra 1 hour for S1"</li>
+                                <li>"S2 me aadha ghanta jodo"</li>
+                                <li>"S3 plus half hour"</li>
+                            </ul>
+                        </div>
+                        <div class="bg-indigo-950/30 p-2.5 rounded-xl border border-white/5">
+                            <h4 class="font-extrabold text-slate-200 uppercase mb-1 border-b border-white/5 pb-1 text-[9px] text-amber-500/80">6. Pause & Resume All</h4>
+                            <p class="italic mb-1">Commands (English / Hindi):</p>
+                            <ul class="list-disc pl-3.5 space-y-0.5">
+                                <li>"Pause all timers" / "Sari screens pause karo"</li>
+                                <li>"Resume all timers" / "Sari screens resume"</li>
+                                <li>"Power failure pause all"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </section>
         
         <!-- Live Station Counters HUD -->
         <section class="grid grid-cols-4 gap-3 mb-6">
@@ -261,7 +366,7 @@
                     </select>
                 </div>
 
-                <!-- Custom Sound Parameters (Enabled when Custom profile is selected) -->
+                <!-- Custom Sound Parameters -->
                 <div id="customSirenControls" class="space-y-4 opacity-50 pointer-events-none transition-all">
                     <div>
                         <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Base Pitch / Frequency (<span id="freqValDisplay">160</span>Hz)</label>
@@ -313,7 +418,7 @@
             </form>
         </div>
 
-        <!-- Custom Duration Modal (Upgraded) -->
+        <!-- Custom Duration Modal -->
         <div id="customTimeModal" class="hidden w-full max-w-sm royal-glass-card border border-amber-500/30 rounded-2xl p-6 relative shadow-[0_0_45px_rgba(217,119,6,0.15)] transform scale-95 transition-transform">
             <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-all">
                 <i class="fa-solid fa-xmark text-md"></i>
@@ -358,7 +463,7 @@
             </form>
         </div>
 
-        <!-- Add Time / Extension Modal (Upgraded) -->
+        <!-- Add Time / Extension Modal -->
         <div id="addTimeModal" class="hidden w-full max-w-sm royal-glass-card border border-amber-500/30 rounded-2xl p-6 relative shadow-[0_0_45px_rgba(217,119,6,0.15)] transform scale-95 transition-transform">
             <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-all">
                 <i class="fa-solid fa-xmark text-md"></i>
@@ -392,7 +497,7 @@
             </form>
         </div>
 
-        <!-- Custom Confirmation Modal (Bypasses Native Confirm) -->
+        <!-- Custom Confirmation Modal -->
         <div id="confirmModal" class="hidden w-full max-w-sm royal-glass-card border border-red-500/30 rounded-2xl p-6 relative shadow-[0_0_45px_rgba(239,68,68,0.15)] transform scale-95 transition-transform">
             <button onclick="closeConfirmModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-all">
                 <i class="fa-solid fa-xmark text-md"></i>
@@ -428,8 +533,14 @@
             interval: 1.8
         };
 
+        // Voice AI Recognition System configurations
+        let recognitionSystem = null;
+        let isVoiceListening = false;
+        let autoRestartVoice = false;
+
         window.onload = function() {
             initApp();
+            initMiloVoiceAI();
         }
 
         // Pricing algorithm
@@ -682,6 +793,357 @@
             updateStatsSummary();
             showToast("🔇 All heritage sirens have been completely silenced.", "info");
         }
+
+        /* ------------------------------------------------------------
+           VOICE COMMAND PROCESSING ENGINE (MILO AI)
+        ------------------------------------------------------------ */
+        function initMiloVoiceAI() {
+            const SpeechAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechAPI) {
+                recognitionSystem = new SpeechAPI();
+                recognitionSystem.continuous = true;
+                recognitionSystem.interimResults = false;
+                recognitionSystem.lang = 'en-IN'; // Works flawlessly for Indian English & Hinglish accents
+
+                recognitionSystem.onresult = function(event) {
+                    const lastIndex = event.results.length - 1;
+                    const originalTranscript = event.results[lastIndex][0].transcript;
+                    
+                    console.log("🗣️ Milo heard raw audio:", originalTranscript);
+                    parseAndExecuteMiloCommand(originalTranscript);
+                };
+
+                recognitionSystem.onerror = function(event) {
+                    console.warn("Milo Speech API encountered error:", event.error);
+                };
+
+                recognitionSystem.onend = function() {
+                    if (autoRestartVoice) {
+                        try { recognitionSystem.start(); } catch(e){}
+                    } else {
+                        updateVoiceMiloUIIcons(false);
+                    }
+                };
+            } else {
+                document.getElementById('aiVoiceBtn').style.display = 'none';
+            }
+        }
+
+        function toggleContinuousVoiceAI() {
+            if (!recognitionSystem) {
+                showToast("Aapka device voice recognition hardware support nahi karta.", "danger");
+                return;
+            }
+
+            if (isVoiceListening) {
+                isVoiceListening = false;
+                autoRestartVoice = false;
+                recognitionSystem.stop();
+                updateVoiceMiloUIIcons(false);
+                document.getElementById('voiceHeardText').innerText = '"Waiting for command... Speech Engine Standby"';
+                document.getElementById('voiceResultText').innerText = 'NONE';
+                showToast("🎙️ Milo Voice AI is now in standby sleep mode.", "info");
+            } else {
+                isVoiceListening = true;
+                autoRestartVoice = true;
+                getSharedAudioContext(); // user interaction trigger to unlock Web Audio API
+                try { recognitionSystem.start(); } catch(e){}
+                updateVoiceMiloUIIcons(true);
+                showToast("🎙️ Milo Voice AI Active! You can speak commands continuously.", "success");
+            }
+        }
+
+        function updateVoiceMiloUIIcons(isActive) {
+            const icon = document.getElementById('aiVoiceIcon');
+            const txt = document.getElementById('aiVoiceTxt');
+            const ring = document.getElementById('aiVoiceRing');
+            const dot = document.getElementById('aiVoiceStatusDot');
+            const dotInner = document.getElementById('aiVoiceStatusDotInner');
+            const label = document.getElementById('miloStatusLabel');
+
+            if (isActive) {
+                icon.className = "fa-solid fa-microphone text-yellow-500 animate-pulse";
+                txt.innerText = "MILO AI VOICE: LISTENING";
+                txt.className = "text-yellow-500 font-extrabold";
+                ring.classList.remove('hidden');
+                dot.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75";
+                dotInner.className = "relative inline-flex rounded-full h-2 w-2 bg-yellow-500";
+                label.innerText = "MILO IS ACTIVE";
+                label.className = "text-[8px] text-yellow-500 font-black uppercase tracking-widest animate-pulse";
+            } else {
+                icon.className = "fa-solid fa-microphone-slash text-slate-400";
+                txt.innerText = "MILO AI VOICE: STANDBY";
+                txt.className = "text-slate-300";
+                ring.classList.add('hidden');
+                dot.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-500 opacity-75";
+                dotInner.className = "relative inline-flex rounded-full h-2 w-2 bg-slate-500";
+                label.innerText = "SYSTEM READY";
+                label.className = "text-[8px] text-slate-500 font-bold uppercase tracking-widest";
+            }
+        }
+
+        // HIGH PERFORMANCE HINGLISH PARSER FOR 6 CRITICAL COMMAND ACTION DIRECTIVES
+        function parseAndExecuteMiloCommand(transcript) {
+            const text = transcript.toLowerCase().trim();
+            document.getElementById('voiceHeardText').innerText = `"${transcript}"`;
+
+            // Normalize Hinglish numerals and common phrasing variations
+            let cleanText = text
+                .replace(/एस/g, 's')
+                .replace(/screen/g, 's')
+                .replace(/सीट/g, 's')
+                .replace(/सीट/g, 's')
+                .replace(/c/g, 's')
+                .replace(/seat/g, 's')
+                .replace(/वन/g, '1')
+                .replace(/टू/g, '2')
+                .replace(/थ्री/g, '3')
+                .replace(/फोर/g, '4')
+                .replace(/फाइव/g, '5')
+                .replace(/सिक्स/g, '6')
+                .replace(/सेवन/g, '7')
+                .replace(/एट/g, '8')
+                .replace(/नाइन/g, '9')
+                .replace(/one/g, '1')
+                .replace(/two/g, '2')
+                .replace(/three/g, '3')
+                .replace(/four/g, '4')
+                .replace(/five/g, '5')
+                .replace(/six/g, '6')
+                .replace(/seven/g, '7')
+                .replace(/eight/g, '8')
+                .replace(/nine/g, '9')
+                .replace(/half/g, '0.5')
+                .replace(/aadha/g, '0.5')
+                .replace(/आधा/g, '0.5')
+                .replace(/डेढ़/g, '1.5')
+                .replace(/dedh/g, '1.5');
+
+            const compactedText = cleanText.replace(/\s+/g, '');
+
+            console.log("🛠️ Milo Parsed Normal:", cleanText, " | compacted:", compactedText);
+
+            // GLOBAL COMMANDS FIRST (Command No. 6: Pause and Resume All timers)
+            if (cleanText.includes('pause all') || cleanText.includes('sari screen pause') || cleanText.includes('rok do sab') || cleanText.includes('light chaligai') || cleanText.includes('pause all timer')) {
+                pauseAllTimers();
+                document.getElementById('voiceResultText').innerText = "SUCCESS: GLOBAL PAUSE ALL CONSOLES";
+                playVoiceChimeConfirm();
+                return;
+            }
+            if (cleanText.includes('resume all') || cleanText.includes('sari screen resume') || cleanText.includes('chalu do sab') || cleanText.includes('light aagai') || cleanText.includes('resume all timer')) {
+                resumeAllTimers();
+                document.getElementById('voiceResultText').innerText = "SUCCESS: GLOBAL RESUME ALL CONSOLES";
+                playVoiceChimeConfirm();
+                return;
+            }
+            if (cleanText.includes('mute all') || cleanText.includes('sari siren mute') || cleanText.includes('silent all') || cleanText.includes('sab mute') || cleanText.includes('mute all siren')) {
+                muteAllAlarms();
+                document.getElementById('voiceResultText').innerText = "SUCCESS: ALL ALARMS MUTED";
+                playVoiceChimeConfirm();
+                return;
+            }
+
+            // Target Seat Finder S1 to S9 (or dynamically added screens)
+            let matchedSeat = null;
+            seats.forEach(seat => {
+                const numericPart = seat.name.toLowerCase().replace(/\D/g, ''); 
+                
+                // Matches patterns like "s1", "s 1", "seat1", "seat 1", "screen1", "s-1"
+                const seatPattern1 = new RegExp(`\\bs\\s*${numericPart}\\b`, 'i');
+                const seatPattern2 = new RegExp(`\\bseat\\s*${numericPart}\\b`, 'i');
+                const seatPattern3 = new RegExp(`\\bscreen\\s*${numericPart}\\b`, 'i');
+                const seatPattern4 = new RegExp(`\\b${seat.name.toLowerCase()}\\b`, 'i');
+
+                if (seatPattern1.test(cleanText) || seatPattern2.test(cleanText) || seatPattern3.test(cleanText) || seatPattern4.test(cleanText) || compactedText.includes(seat.id.toLowerCase())) {
+                    matchedSeat = seat;
+                }
+            });
+
+            if (!matchedSeat) {
+                document.getElementById('voiceResultText').innerText = "ABORTED: Console/Screen Not Recognized";
+                return;
+            }
+
+            // Command Type mapping
+            let actionType = null;
+            // 1. Start timer command check
+            if (cleanText.includes('start') || cleanText.includes('play') || cleanText.includes('chalu') || cleanText.includes('shuru') || cleanText.includes('चालू') || cleanText.includes('शुरू')) {
+                actionType = 'start';
+            } 
+            // 2. Stop timer command check
+            else if (cleanText.includes('stop') || cleanText.includes('clear') || cleanText.includes('reset') || cleanText.includes('band') || cleanText.includes('free') || cleanText.includes('बंद') || cleanText.includes('खत्म')) {
+                actionType = 'stop';
+            } 
+            // 3. Mute siren command check
+            else if (cleanText.includes('mute') || cleanText.includes('silent') || cleanText.includes('shant') || cleanText.includes('alarm band') || cleanText.includes('mute siren')) {
+                actionType = 'mute';
+            } 
+            // 4. Pause and resume command check
+            else if (cleanText.includes('pause') || cleanText.includes('rok') || cleanText.includes('पॉज') || cleanText.includes('रोको') || cleanText.includes('रोक')) {
+                actionType = 'pause';
+            } else if (cleanText.includes('resume') || cleanText.includes('unpause') || cleanText.includes('wapas') || cleanText.includes('continue') || cleanText.includes('रिज़्यूम')) {
+                actionType = 'resume';
+            } 
+            // 5. Add extra 1 or half hour time command check
+            else if (cleanText.includes('add') || cleanText.includes('extend') || cleanText.includes('extra') || cleanText.includes('jodo') || cleanText.includes('plus')) {
+                actionType = 'add_time';
+            }
+
+            if (!actionType) {
+                document.getElementById('voiceResultText').innerText = "ABORTED: Command Directive Action Unclear";
+                return;
+            }
+
+            let executeOutcome = "";
+            let triggerSuccessChime = false;
+
+            if (actionType === 'start') {
+                if (matchedSeat.isRunning) {
+                    executeOutcome = `ABORTED: ${matchedSeat.name} is already active`;
+                } else {
+                    // Extract duration defaults (1 Hour)
+                    let hours = 1;
+                    if (cleanText.includes('0.5') || cleanText.includes('30') || cleanText.includes('aadha') || cleanText.includes('half') || cleanText.includes('aadha ghanta') || cleanText.includes('तीस मिनट')) {
+                        hours = 0.5;
+                    } else if (cleanText.includes('2') || cleanText.includes('do ghante') || cleanText.includes('two') || cleanText.includes('दो घंटे')) {
+                        hours = 2;
+                    } else if (cleanText.includes('3') || cleanText.includes('teen') || cleanText.includes('three') || cleanText.includes('तीन')) {
+                        hours = 3;
+                    } else if (cleanText.includes('4') || cleanText.includes('char') || cleanText.includes('four') || cleanText.includes('चार')) {
+                        hours = 4;
+                    }
+
+                    // Extract Player count defaults (1 Player)
+                    let players = 1;
+                    if (cleanText.includes('2 player') || cleanText.includes('do player') || cleanText.includes('2 p') || cleanText.includes('two players') || cleanText.includes('दो प्लेयर')) {
+                        players = 2;
+                    } else if (cleanText.includes('3 player') || cleanText.includes('teen player') || cleanText.includes('3 p') || cleanText.includes('three players') || cleanText.includes('तीन प्लेयर')) {
+                        players = 3;
+                    } else if (cleanText.includes('4 player') || cleanText.includes('char player') || cleanText.includes('4 p') || cleanText.includes('four players') || cleanText.includes('चार प्लेयर')) {
+                        players = 4;
+                    }
+
+                    executeQuickStart(matchedSeat, hours * 60, hours, players);
+                    executeOutcome = `SUCCESS: STARTED ${matchedSeat.name} FOR ${hours}H (${players}P)`;
+                    triggerSuccessChime = true;
+                }
+            }
+            else if (actionType === 'stop') {
+                if (matchedSeat.isRunning) {
+                    stopSeatSession(matchedSeat.id, true);
+                    executeOutcome = `SUCCESS: CLEARED ${matchedSeat.name}`;
+                    triggerSuccessChime = true;
+                } else {
+                    executeOutcome = `ABORTED: ${matchedSeat.name} is not active`;
+                }
+            }
+            else if (actionType === 'pause') {
+                if (matchedSeat.isRunning && !matchedSeat.isPaused) {
+                    pauseSeatSession(matchedSeat.id);
+                    executeOutcome = `SUCCESS: PAUSED ${matchedSeat.name}`;
+                    triggerSuccessChime = true;
+                } else {
+                    executeOutcome = `ABORTED: ${matchedSeat.name} cannot be paused`;
+                }
+            }
+            else if (actionType === 'resume') {
+                if (matchedSeat.isRunning && matchedSeat.isPaused) {
+                    resumeSeatSession(matchedSeat.id);
+                    executeOutcome = `SUCCESS: RESUMED ${matchedSeat.name}`;
+                    triggerSuccessChime = true;
+                } else {
+                    executeOutcome = `ABORTED: ${matchedSeat.name} is not paused`;
+                }
+            }
+            else if (actionType === 'mute') {
+                if (matchedSeat.alarmState !== 'none') {
+                    acknowledgeAlarm(matchedSeat.id);
+                    executeOutcome = `SUCCESS: MUTED ALARM FOR ${matchedSeat.name}`;
+                    triggerSuccessChime = true;
+                } else {
+                    executeOutcome = `ABORTED: No active alarm on ${matchedSeat.name}`;
+                }
+            }
+            else if (actionType === 'add_time') {
+                if (matchedSeat.isRunning) {
+                    let extendMinutes = 60; // 1 hour baseline
+                    let showDurationLabel = "1H";
+                    
+                    if (cleanText.includes('0.5') || cleanText.includes('30') || cleanText.includes('aadha') || cleanText.includes('half') || cleanText.includes('aadha ghanta') || cleanText.includes('तीस मिनट')) {
+                        extendMinutes = 30;
+                        showDurationLabel = "30m";
+                    }
+
+                    executeAddTime(matchedSeat.id, extendMinutes);
+                    executeOutcome = `SUCCESS: ADDED ${showDurationLabel} TO ${matchedSeat.name}`;
+                    triggerSuccessChime = true;
+                } else {
+                    executeOutcome = `ABORTED: Cannot add time to idle ${matchedSeat.name}`;
+                }
+            }
+
+            document.getElementById('voiceResultText').innerText = executeOutcome;
+            if (triggerSuccessChime) {
+                playVoiceChimeConfirm();
+            }
+        }
+
+        // Milo voice acknowledgement feedback chime
+        function playVoiceChimeConfirm() {
+            try {
+                const ctx = getSharedAudioContext();
+                let osc = ctx.createOscillator();
+                let gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5 chord chime
+                osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.22);
+                osc.start(); osc.stop(ctx.currentTime + 0.22);
+            } catch(e) {}
+        }
+
+        // Global commands helpers
+        function pauseAllTimers() {
+            let pausedCount = 0;
+            seats.forEach(seat => {
+                if (seat.isRunning && !seat.isPaused) {
+                    stopAudioAlert(seat.id);
+                    const now = Date.now();
+                    seat.remainingMs = Math.max(0, seat.endTime - now);
+                    seat.isPaused = true;
+                    seat.alarmState = 'none';
+                    pausedCount++;
+                }
+            });
+            if (pausedCount > 0) {
+                saveState();
+                renderWorkspace();
+                updateStatsSummary();
+                showToast(`🔌 Global Pause Activated! Paused ${pausedCount} active screens safely.`, "warning");
+            }
+        }
+
+        function resumeAllTimers() {
+            let resumedCount = 0;
+            seats.forEach(seat => {
+                if (seat.isRunning && seat.isPaused) {
+                    const now = Date.now();
+                    seat.endTime = now + seat.remainingMs;
+                    seat.startTime = seat.endTime - (seat.initialDuration * 60000);
+                    seat.isPaused = false;
+                    resumedCount++;
+                }
+            });
+            if (resumedCount > 0) {
+                saveState();
+                renderWorkspace();
+                updateStatsSummary();
+                showToast(`💡 Global Resume Activated! Resumed ${resumedCount} consoles gracefully.`, "success");
+            }
+        }
+
 
         /* ------------------------------------------------------------
            CORE UI BUILDER ENGINE (Zero-Lag Targeting)
@@ -1282,6 +1744,7 @@
             seat.rate = calculateSessionPrice(durationMinutes, playerMultiplier);
 
             saveState();
+            syncAlarmsToBackground(seat);
             renderWorkspaceCard(seat);
             updateStatsSummary();
         }
@@ -1318,6 +1781,7 @@
             seat.remainingMs = Math.max(0, seat.endTime - now);
 
             saveState();
+            syncAlarmsToBackground(seat);
 
             renderWorkspaceCard(seat);
             updateStatsSummary();
@@ -1330,6 +1794,7 @@
             if (!seat) return;
 
             stopAudioAlert(seatId);
+            cancelBackgroundAlarms(seatId);
 
             const now = Date.now();
 
@@ -1432,6 +1897,7 @@
                 seat.rate = calculateSessionPrice(totalMins, selectedCustomPlayers);
 
                 saveState();
+                syncAlarmsToBackground(seat);
 
                 renderWorkspaceCard(seat);
                 updateStatsSummary();
@@ -1459,9 +1925,6 @@
         function handleAddTimeStart(e) {
             e.preventDefault();
             const id = document.getElementById('addTimeModalSeatId').value;
-            const seat = seats.find(s => s.id === id);
-            if (!seat || !seat.isRunning) return;
-
             const h = parseInt(document.getElementById('addTimeHours').value) || 0;
             const m = parseInt(document.getElementById('addTimeMinutes').value) || 0;
             const extraMins = (h * 60) + m;
@@ -1471,10 +1934,19 @@
                 return;
             }
 
+            executeAddTime(id, extraMins);
+            closeModals();
+        }
+
+        // Shared helper execution to extension calculations
+        function executeAddTime(seatId, extraMins) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat || !seat.isRunning) return;
+
             const now = Date.now();
             const addedMs = extraMins * 60 * 1000;
 
-            // If session had already ended, we extend from "now", else extend from "endTime"
+            // If session had already ended, extend from "now", else extend from "endTime"
             let baseTime = seat.endTime;
             if (seat.endTime < now) {
                 baseTime = now;
@@ -1496,9 +1968,10 @@
             }
 
             saveState();
+            syncAlarmsToBackground(seat);
+
             renderWorkspaceCard(seat);
             updateStatsSummary();
-            closeModals();
             showToast(`⏱️ Added <b>${extraMins} mins</b> extra to console <b>${seat.name}</b> successfully.`, "success");
         }
 
@@ -1555,6 +2028,18 @@
             document.getElementById('alarmCounter').innerText = dangerAlerts;
         }
 
+        function clearLogs() {
+            logs = [];
+            saveState();
+            renderLogsTable();
+            updateStatsSummary();
+            showToast("🧹 Play history has been cleared.", "info");
+        }
+
+        // Mock background alarms function matching context compatibility parameters
+        function syncAlarmsToBackground(seat) {}
+        function cancelBackgroundAlarms(seatId) {}
+
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -1566,7 +2051,7 @@
                 colorTheme = "bg-green-950/80 border-green-800/80 text-green-100 shadow-[0_0_15px_rgba(34,197,94,0.15)] backdrop-blur-md";
                 icon = "fa-solid fa-circle-check text-green-400";
             } else if (type === 'warning') {
-                colorTheme = "bg-yellow-950/80 border-yellow-800/80 text-yellow-100 shadow-[0_0_15px_rgba(245,158,11,0.2)] backdrop-blur-md";
+                colorTheme = "bg-yellow-950/80 border-yellow-800/80 text-yellow-100 shadow-[0_0_15px_rgba(234,179,8,0.2)] backdrop-blur-md";
                 icon = "fa-solid fa-triangle-exclamation text-yellow-400 animate-pulse";
             } else if (type === 'danger') {
                 colorTheme = "bg-red-950/80 border-red-800/80 text-red-100 shadow-[0_0_20px_rgba(239,68,68,0.25)] backdrop-blur-md";
