@@ -3,242 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TAB GAMEPAD - Luxury Edition</title>
+    <title>TAB GAMEPAD - Luxury Voice Suite</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome for Pro Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts for Luxury Vibe -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts for Luxury Aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
-        /* Luxury Font Defaults */
-        body { font-family: 'Montserrat', sans-serif; background-color: #050505; color: #e2e8f0; }
-        .font-luxury { font-family: 'Cinzel', serif; }
+        /* Luxury Styling Presets */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: #030303; 
+            color: #f8fafc; 
+            overflow-x: hidden;
+        }
+        .font-luxury { 
+            font-family: 'Cinzel', serif; 
+        }
 
-        /* Disable double tap zoom */
+        /* Prevent double tap zoom on mobile devices */
         touch-action: manipulation;
 
-        /* Deep Luxury Animated Background */
-        .luxury-bg {
+        /* Ambient Glowing Luxury Background */
+        .luxury-ambient-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
-            background: radial-gradient(circle at 15% 50%, rgba(30, 27, 75, 0.4), transparent 50%),
-                        radial-gradient(circle at 85% 30%, rgba(67, 56, 202, 0.2), transparent 50%),
-                        radial-gradient(circle at 50% 80%, rgba(180, 83, 9, 0.15), transparent 50%);
-            background-color: #09090b;
-        }
-        
-        .luxury-bg::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            z-index: -1;
+            background: radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.12), transparent 45%),
+                        radial-gradient(circle at 90% 80%, rgba(219, 39, 119, 0.08), transparent 45%),
+                        radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.05), transparent 60%);
+            background-color: #050507;
         }
 
-        /* Glassmorphism & Gold Theme Cards */
-        .glass-card {
-            background: rgba(15, 15, 20, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        /* Glassmorphic Cards with Gold Highlights */
+        .luxury-glass-card {
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 1px solid rgba(255, 255, 255, 0.04);
+            border-right: 1px solid rgba(212, 175, 55, 0.05);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.03);
         }
 
-        .gold-text {
+        /* True Gold Metallic Gradients */
+        .gold-gradient-text {
             background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
-
-        /* Card States */
-        .card-idle { border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .card-active { border: 1px solid rgba(212, 175, 55, 0.5); box-shadow: 0 0 20px rgba(212, 175, 55, 0.15), inset 0 0 10px rgba(212, 175, 55, 0.05); }
-        .card-paused { border: 1px solid rgba(56, 189, 248, 0.6); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
-        .card-warning { border: 1px solid rgba(234, 179, 8, 0.8); animation: warning-glow 1.5s infinite alternate; }
-        .card-danger { border: 1px solid rgba(239, 68, 68, 0.9); animation: danger-glow 0.8s infinite alternate; }
-
-        @keyframes warning-glow {
-            0% { box-shadow: 0 0 10px rgba(234, 179, 8, 0.3); }
-            100% { box-shadow: 0 0 25px rgba(234, 179, 8, 0.6), inset 0 0 10px rgba(234, 179, 8, 0.2); }
-        }
-        @keyframes danger-glow {
-            0% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); transform: scale(1); }
-            100% { box-shadow: 0 0 35px rgba(239, 68, 68, 0.8), inset 0 0 15px rgba(239, 68, 68, 0.4); transform: scale(1.01); }
+        .gold-gradient-btn {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #aa771c);
+            color: #000000;
         }
 
-        /* Microphone Pulse */
-        .mic-active-ring {
-            position: absolute; border-radius: 50%; border: 2px solid #22c55e;
-            width: 100%; height: 100%; top: 0; left: 0; animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        /* Ambient Glowing Borders for Console Cards */
+        .glow-border-idle {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
         }
-        @keyframes ping-slow { 75%, 100% { transform: scale(2); opacity: 0; } }
+        .glow-border-active {
+            border: 1.5px solid rgba(168, 85, 247, 0.6);
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.25), inset 0 0 10px rgba(168, 85, 247, 0.05);
+            transition: all 0.4s ease;
+        }
+        .glow-border-paused {
+            border: 1.5px solid rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.25), inset 0 0 10px rgba(59, 130, 246, 0.05);
+            transition: all 0.4s ease;
+        }
+        .glow-border-warning {
+            border: 1.5px solid rgba(234, 179, 8, 0.8);
+            animation: pulse-gold-alert 1.2s infinite alternate;
+        }
+        .glow-border-danger {
+            border: 1.5px solid rgba(239, 68, 68, 0.9);
+            animation: pulse-red-alert 0.8s infinite alternate;
+        }
 
-        /* Custom Scrollbar */
+        @keyframes pulse-gold-alert {
+            0% { box-shadow: 0 0 10px rgba(234, 179, 8, 0.2); transform: scale(1); }
+            100% { box-shadow: 0 0 25px rgba(234, 179, 8, 0.6), inset 0 0 10px rgba(234, 179, 8, 0.15); transform: scale(1.015); }
+        }
+        @keyframes pulse-red-alert {
+            0% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); transform: scale(1); }
+            100% { box-shadow: 0 0 35px rgba(239, 68, 68, 0.85), inset 0 0 15px rgba(239, 68, 68, 0.3); transform: scale(1.025); }
+        }
+
+        /* Pulsing voice waveform ring */
+        .pulse-mic-ring {
+            position: absolute; border-radius: 50%; border: 2px solid #eab308;
+            width: 100%; height: 100%; top: 0; left: 0; animation: wave-pulse 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        @keyframes wave-pulse { 75%, 100% { transform: scale(2.2); opacity: 0; } }
+
+        /* Sleek custom scrollbars */
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-        ::-webkit-scrollbar-thumb { background: #b38728; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+        ::-webkit-scrollbar-thumb { background: #aa771c; border-radius: 4px; }
     </style>
 </head>
-<body class="flex flex-col select-none">
+<body class="flex flex-col min-h-screen">
     
-    <!-- Animated Luxury Background -->
-    <div class="luxury-bg"></div>
+    <!-- Moving Luxury Ambient Lights -->
+    <div class="luxury-ambient-bg"></div>
 
-    <!-- Top Luxury Header -->
-    <header class="glass-card sticky top-0 z-50 px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-b border-white/10">
+    <!-- VIP Lounge Top Header -->
+    <header class="luxury-glass-card sticky top-0 z-50 px-4 py-4 shadow-[0_10px_35px_rgba(0,0,0,0.85)] border-b border-white/5">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <!-- Brand -->
+            <!-- Brand & Version -->
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-full border border-yellow-500/50 flex items-center justify-center bg-black/50 shadow-[0_0_15px_rgba(212,175,55,0.3)]">
-                    <i class="fa-solid fa-gamepad text-2xl gold-text"></i>
+                <div class="w-12 h-12 rounded-2xl border border-yellow-500/40 flex items-center justify-center bg-black/60 shadow-[0_0_15px_rgba(191,149,63,0.3)]">
+                    <i class="fa-solid fa-gamepad text-2xl gold-gradient-text"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-luxury font-black tracking-widest gold-text drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">
+                    <h1 class="text-2xl font-luxury font-black tracking-widest gold-gradient-text drop-shadow-[0_0_12px_rgba(191,149,63,0.25)]">
                         TAB GAMEPAD
                     </h1>
-                    <p class="text-[9px] font-bold text-slate-400 tracking-widest uppercase mt-0.5">
-                        VIP Gaming Lounge Server
+                    <p class="text-[9px] font-black text-slate-400 tracking-widest uppercase mt-0.5">
+                        7-Star Ultimate AI Monitor
                     </p>
                 </div>
             </div>
 
-            <!-- Voice AI & Controls -->
-            <div class="flex items-center gap-3">
-                <!-- AI Milo Mic Button -->
-                <button id="aiMicBtn" onclick="toggleContinuousMic()" class="relative bg-black/60 hover:bg-black text-[10px] px-4 py-2.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-2 transition-all border border-slate-700 shadow-lg">
-                    <div id="aiMicRing" class="hidden mic-active-ring"></div>
-                    <i id="aiMicIcon" class="fa-solid fa-microphone-slash text-slate-500"></i>
-                    <span id="aiMicTxt" class="text-slate-400">Milo Auto-Voice: OFF</span>
+            <!-- Dashboard Global Operations -->
+            <div class="flex flex-wrap items-center gap-2">
+                <!-- Milo AI Continual Listening Mic -->
+                <button id="aiMicBtn" onclick="toggleContinuousMic()" class="relative bg-slate-950 hover:bg-black text-[10px] px-4 py-3 rounded-full font-black uppercase tracking-wider flex items-center gap-2.5 transition-all border border-yellow-500/20 shadow-lg">
+                    <div id="aiMicRing" class="hidden pulse-mic-ring"></div>
+                    <span class="relative flex h-2 w-2">
+                        <span id="aiMicStatusDot" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-500 opacity-75"></span>
+                        <span id="aiMicStatusDotInner" class="relative inline-flex rounded-full h-2 w-2 bg-slate-500"></span>
+                    </span>
+                    <i id="aiMicIcon" class="fa-solid fa-microphone-slash text-slate-400"></i>
+                    <span id="aiMicTxt" class="text-slate-300">MILO AI: STANDBY</span>
                 </button>
 
-                <button onclick="openAddScreenModal()" class="bg-gradient-to-r from-yellow-600 to-amber-500 text-black hover:from-yellow-500 hover:to-amber-400 text-[10px] px-3.5 py-2.5 rounded-full font-black uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_15px_rgba(245,158,11,0.3)] active:scale-95 transition-all">
-                    <i class="fa-solid fa-plus"></i> New
+                <!-- Add New Screen Station Button -->
+                <button onclick="openAddScreenModal()" class="gold-gradient-btn text-black text-[10px] px-4 py-3 rounded-full font-black uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_15px_rgba(191,149,63,0.3)] active:scale-95 transition-all">
+                    <i class="fa-solid fa-plus-circle text-xs"></i> Add Station
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Dashboard -->
+    <!-- Main Workspace Dashboard -->
     <main class="max-w-7xl w-full mx-auto p-4 flex-grow pb-28">
         
-        <!-- Live Status HUD -->
-        <section class="grid grid-cols-3 gap-3 mb-8">
-            <div class="glass-card p-4 rounded-2xl text-center border-t border-white/5 relative overflow-hidden group">
-                <i class="fa-solid fa-play absolute -right-3 -top-3 text-4xl text-green-500/5 group-hover:text-green-500/10 transition-all"></i>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Active Consoles</p>
-                <h3 class="text-2xl font-luxury font-black text-green-400 mt-1" id="activeCounter">0</h3>
+        <!-- REAL-TIME MILO AI CONSOLE (Shows exactly what Milo hears & implements) -->
+        <section class="mb-6 luxury-glass-card rounded-2xl border border-yellow-500/20 p-4 shadow-xl">
+            <div class="flex items-center justify-between pb-2 border-b border-white/5">
+                <h3 class="text-[10px] font-black text-yellow-500 uppercase tracking-widest flex items-center gap-2">
+                    <i class="fa-solid fa-brain animate-pulse"></i> Milo AI Command Console
+                </h3>
+                <span class="text-[8px] text-slate-500 font-bold uppercase tracking-widest" id="miloStatusLabel">System Ready</span>
             </div>
-            <div class="glass-card p-4 rounded-2xl text-center border-t border-white/5 relative overflow-hidden group">
-                <i class="fa-solid fa-hourglass-half absolute -right-3 -top-3 text-4xl text-yellow-500/5 group-hover:text-yellow-500/10 transition-all"></i>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">10 Min Alerts</p>
-                <h3 class="text-2xl font-luxury font-black text-yellow-400 mt-1" id="warningCounter">0</h3>
-            </div>
-            <div class="glass-card p-4 rounded-2xl text-center border-t border-white/5 relative overflow-hidden group">
-                <i class="fa-solid fa-radiation absolute -right-3 -top-3 text-4xl text-red-500/5 group-hover:text-red-500/10 transition-all"></i>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Time Completed</p>
-                <h3 class="text-2xl font-luxury font-black text-red-500 mt-1" id="alarmCounter">0</h3>
-            </div>
-        </section>
-
-        <!-- Dynamic Workspaces -->
-        <section class="mb-10">
-            <div class="flex justify-between items-center mb-5">
-                <h2 class="text-xs font-black text-slate-200 tracking-widest uppercase flex items-center gap-2">
-                    <i class="fa-solid fa-crown gold-text"></i> VIP Stations
-                </h2>
-                <div class="flex items-center gap-2 text-[9px] text-slate-500 font-bold tracking-widest uppercase">
-                    <i class="fa-solid fa-circle text-green-500 text-[6px] animate-pulse"></i> Zero-Lag Engine Running
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                <div class="bg-black/40 rounded-xl p-3 border border-white/5">
+                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Milo Ne Suna:</span>
+                    <p class="text-xs font-semibold text-slate-300 mt-1 italic" id="voiceHeardText">"Waiting for command... Microphone band hai"</p>
+                </div>
+                <div class="bg-black/40 rounded-xl p-3 border border-white/5">
+                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Action Taken:</span>
+                    <p class="text-xs font-bold text-yellow-400 mt-1 uppercase tracking-wider" id="voiceResultText">None</p>
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5" id="screensWorkspace">
-                <!-- Screens will render here via JS -->
+            <!-- Helpful Voice Guide -->
+            <div class="mt-3 text-[9px] text-slate-500 flex flex-wrap gap-x-4 gap-y-1">
+                <span>🎤 <b>Try Saying:</b></span>
+                <span>"S1 start do ghante"</span>
+                <span>"S2 chalu karo aadha ghanta"</span>
+                <span>"S3 band kar do"</span>
+                <span>"S4 pause karo"</span>
+                <span>"S4 play karo"</span>
             </div>
         </section>
+
+        <!-- Live Station Counters HUD -->
+        <section class="grid grid-cols-3 gap-3 mb-6">
+            <div class="luxury-glass-card p-4 rounded-2xl text-center relative overflow-hidden group">
+                <i class="fa-solid fa-play absolute -right-3 -top-3 text-4xl text-green-500/5 transition-all"></i>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Stations</p>
+                <h3 class="text-xl font-luxury font-black text-green-400 mt-1" id="activeCounter">0</h3>
+            </div>
+            <div class="luxury-glass-card p-4 rounded-2xl text-center relative overflow-hidden group">
+                <i class="fa-solid fa-bell absolute -right-3 -top-3 text-4xl text-yellow-500/5 transition-all"></i>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">10m Warnings</p>
+                <h3 class="text-xl font-luxury font-black text-yellow-400 mt-1" id="warningCounter">0</h3>
+            </div>
+            <div class="luxury-glass-card p-4 rounded-2xl text-center relative overflow-hidden group">
+                <i class="fa-solid fa-radiation absolute -right-3 -top-3 text-4xl text-red-500/5 transition-all"></i>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Siren Blasting</p>
+                <h3 class="text-xl font-luxury font-black text-red-500 mt-1" id="alarmCounter">0</h3>
+            </div>
+        </section>
+
+        <!-- Dynamic Seats Workstation -->
+        <section class="mb-10">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-xs font-black text-slate-300 tracking-widest uppercase flex items-center gap-1.5">
+                    <i class="fa-solid fa-crown text-yellow-500"></i> Active Stations Monitors
+                </h2>
+                <span class="text-[9px] text-slate-500 font-bold bg-slate-900 border border-white/5 px-3 py-1 rounded-full uppercase tracking-wider">
+                    Lag-Free Engine Active
+                </span>
+            </div>
+
+            <!-- Workspace Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4" id="screensWorkspace">
+                <!-- Cards will render here -->
+            </div>
+        </section>
+
+        <!-- Session History Log -->
+        <section class="border-t border-white/5 pt-4">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-xs font-black text-slate-300 tracking-widest uppercase flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock-rotate-left text-yellow-600"></i> Daily Play Logs History
+                </h3>
+            </div>
+            <div class="bg-slate-950/80 border border-white/5 rounded-2xl overflow-hidden max-h-36 overflow-y-auto shadow-inner">
+                <table class="w-full text-left text-[10px] border-collapse">
+                    <thead>
+                        <tr class="bg-slate-900/60 border-b border-white/5 text-slate-400 font-black uppercase tracking-widest">
+                            <th class="p-2.5">Station ID</th>
+                            <th class="p-2.5">Play Duration</th>
+                            <th class="p-2.5 text-right">Completion Log</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody" class="divide-y divide-white/5 text-slate-300">
+                        <!-- History logs -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex justify-end mt-2">
+                <button onclick="clearLogs()" class="text-[9px] font-extrabold uppercase text-red-400/80 hover:text-red-400 flex items-center gap-1 transition-all">
+                    <i class="fa-solid fa-trash-can"></i> Reset History
+                </button>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Bottom Action Bar -->
-    <div class="fixed bottom-0 left-0 right-0 glass-card border-t border-white/10 p-3.5 flex flex-col sm:flex-row justify-between items-center gap-3.5 z-40 shadow-[0_-10px_30px_rgba(0,0,0,0.8)]">
+    <!-- PREMIUM GOLD BOTTOM BAR CONTROL DECK -->
+    <div class="fixed bottom-0 left-0 right-0 luxury-glass-card border-t-2 border-yellow-500/50 p-4 flex flex-col sm:flex-row justify-between items-center gap-3.5 z-40 shadow-[0_-10px_35px_rgba(0,0,0,0.9)] backdrop-blur-md">
         <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-[0_0_5px_#eab308]"></span>
-            <div class="text-[9px] font-black uppercase text-slate-400 tracking-wider">
-                <span class="gold-text font-luxury">TAB GAMEPAD</span> ROYAL EDITION
+            <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-[0_0_8px_#eab308] animate-ping"></span>
+            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                🕹️ <span class="gold-gradient-text font-luxury font-bold">TAB GAMEPAD</span> ROYAL COMMAND DECK 🎮
             </div>
         </div>
 
         <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-            <button onclick="clearLogs()" class="text-[9px] font-bold text-slate-500 hover:text-red-400 uppercase tracking-widest transition-all">
-                Reset History
-            </button>
-            <button onclick="muteAllAlarms()" class="bg-gradient-to-r from-red-900 to-red-700 hover:from-red-800 hover:to-red-600 text-white text-[10px] px-5 py-2.5 rounded-full font-black uppercase tracking-widest border border-red-500/50 shadow-[0_0_15px_rgba(220,38,38,0.3)] active:scale-95 transition-all flex items-center gap-1.5">
-                <i class="fa-solid fa-volume-xmark"></i> Mute All
+            <span class="text-[9px] text-slate-500 font-black tracking-widest uppercase">AUTO POWER SAFE</span>
+            <button onclick="muteAllAlarms()" class="bg-gradient-to-r from-red-950 via-red-800 to-red-950 hover:from-red-800 hover:to-red-700 text-white text-[10px] px-5 py-2.5 rounded-full font-black uppercase tracking-widest border border-red-500/40 shadow-lg active:scale-95 transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-volume-xmark"></i> Mute All Sirens
             </button>
         </div>
     </div>
 
-    <!-- Toast / Alerts System -->
-    <div id="toastContainer" class="fixed bottom-24 right-4 left-4 sm:left-auto sm:w-96 z-50 flex flex-col gap-3"></div>
+    <!-- Toast Overlays -->
+    <div id="toastContainer" class="fixed bottom-24 right-4 left-4 z-50 flex flex-col gap-2 max-w-sm mx-auto"></div>
 
-    <!-- Modals Background Blur -->
-    <div id="modalOverlay" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all opacity-0">
+    <!-- MODAL OVERLAYS CONTAINER -->
+    <div id="modalOverlay" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all duration-300 opacity-0">
         
         <!-- Add Screen Modal -->
-        <div id="addScreenModal" class="hidden w-full max-w-sm glass-card border border-yellow-500/30 rounded-2xl p-6 relative shadow-[0_0_40px_rgba(212,175,55,0.15)] transform scale-95 transition-transform">
-            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-all text-lg">
-                <i class="fa-solid fa-xmark"></i>
+        <div id="addScreenModal" class="hidden w-full max-w-sm luxury-glass-card border border-yellow-500/30 rounded-2xl p-6 relative shadow-[0_0_45px_rgba(191,149,63,0.15)] transform scale-95 transition-transform">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-all">
+                <i class="fa-solid fa-xmark text-md"></i>
             </button>
-            <h3 class="text-md font-luxury font-black gold-text mb-4 uppercase tracking-wider text-center">
-                Add New Station
+            <h3 class="text-sm font-luxury font-black gold-gradient-text mb-4 uppercase tracking-widest text-center">
+                Add New VIP Screen
             </h3>
             
             <form onsubmit="handleAddNewScreen(event)" class="space-y-4">
                 <div>
-                    <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Screen Name / ID</label>
-                    <input type="text" id="addScreenName" placeholder="E.g. S6, VIP-1" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-white focus:outline-none focus:border-yellow-500/50 transition-all placeholder:text-slate-600" required>
+                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Screen Name *</label>
+                    <input type="text" id="addScreenName" placeholder="E.g. S6, VIP-1" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3 text-xs font-bold text-white focus:outline-none focus:border-yellow-500/50 transition-all placeholder:text-slate-600" required>
                 </div>
-                <div class="pt-3">
-                    <button type="submit" class="w-full bg-gradient-to-r from-yellow-600 to-amber-500 text-black py-3 rounded-xl font-black uppercase tracking-widest shadow-[0_0_15px_rgba(245,158,11,0.2)] active:scale-95 transition-all">Confirm Addition</button>
+                <div class="pt-2">
+                    <button type="submit" class="w-full gold-gradient-btn text-black py-3 rounded-xl font-black uppercase tracking-widest shadow-[0_0_15px_rgba(191,149,63,0.2)] active:scale-95 transition-all">Confirm Screen Addition</button>
                 </div>
             </form>
         </div>
 
         <!-- Custom Duration Modal -->
-        <div id="customTimeModal" class="hidden w-full max-w-sm glass-card border border-purple-500/30 rounded-2xl p-6 relative shadow-[0_0_40px_rgba(168,85,247,0.15)] transform scale-95 transition-transform">
-            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-all text-lg">
-                <i class="fa-solid fa-xmark"></i>
+        <div id="customTimeModal" class="hidden w-full max-w-sm luxury-glass-card border border-purple-500/30 rounded-2xl p-6 relative shadow-[0_0_45px_rgba(168,85,247,0.15)] transform scale-95 transition-transform">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-all">
+                <i class="fa-solid fa-xmark text-md"></i>
             </button>
-            <h3 class="text-md font-luxury font-black text-purple-400 mb-4 uppercase tracking-wider text-center">
-                Custom Duration Setup
+            <h3 class="text-sm font-luxury font-black text-purple-400 mb-4 uppercase tracking-widest text-center">
+                Setup Custom Playtime
             </h3>
             
             <form onsubmit="handleCustomTimeStart(event)" class="space-y-4">
                 <input type="hidden" id="customModalSeatId">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Hours</label>
-                        <input type="number" id="customHours" value="1" min="0" max="24" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-white focus:outline-none focus:border-purple-500/50 transition-all text-center">
+                        <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Hours</label>
+                        <input type="number" id="customHours" value="1" min="0" max="24" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3 text-xs font-bold text-white focus:outline-none focus:border-purple-500/50 transition-all text-center">
                     </div>
                     <div>
-                        <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Minutes</label>
-                        <input type="number" id="customMinutes" value="0" min="0" max="59" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-white focus:outline-none focus:border-purple-500/50 transition-all text-center">
+                        <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Minutes</label>
+                        <input type="number" id="customMinutes" value="0" min="0" max="59" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3 text-xs font-bold text-white focus:outline-none focus:border-purple-500/50 transition-all text-center">
                     </div>
                 </div>
-                <div class="pt-3">
-                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-500 text-white py-3 rounded-xl font-black uppercase tracking-widest shadow-[0_0_15px_rgba(139,92,246,0.3)] active:scale-95 transition-all">Start Game</button>
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all">Launch Screen Timer</button>
                 </div>
             </form>
         </div>
 
     </div>
 
-    <!-- MAIN JAVASCRIPT APP LOGIC -->
+    <!-- Unified, Bug-Free Web Application Script -->
     <script>
         let seats = [];
         let logs = [];
+        
         let universalAudioContext = null;
         let activeSoundOscillators = {};
 
-        // Voice AI Variables
+        // Speech recognition system states
         let speechRecognition = null;
         let isVoiceListening = false;
         let autoRestartVoice = false;
@@ -249,7 +338,9 @@
         }
 
         function initApp() {
-            const savedSeats = localStorage.getItem('gt_premium_seats');
+            const savedSeats = localStorage.getItem('gt_s5_seats_luxury');
+            const savedLogs = localStorage.getItem('gt_s5_logs_luxury');
+
             if (savedSeats) {
                 seats = JSON.parse(savedSeats);
                 seats.forEach(s => {
@@ -257,33 +348,91 @@
                     if (s.remainingMs === undefined) s.remainingMs = 0;
                 });
             } else {
-                seats = [
-                    { id: 'S1', name: 'S1', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 },
-                    { id: 'S2', name: 'S2', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 },
-                    { id: 'S3', name: 'S3', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 },
-                    { id: 'S4', name: 'S4', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 },
-                    { id: 'S5', name: 'S5', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 }
-                ];
-                saveState();
+                resetDefaultSeats();
             }
 
+            if (savedLogs) {
+                logs = JSON.parse(savedLogs);
+            }
+
+            // Centralized Clock Tick - 1s Interval (Optimized Rendering)
             setInterval(gameTimerTick, 1000);
+            
             document.addEventListener("visibilitychange", function() {
-                if (document.visibilityState === 'visible') gameTimerTick();
+                if (document.visibilityState === 'visible') {
+                    gameTimerTick();
+                }
             });
 
             renderWorkspace();
+            renderLogsTable();
             updateStatsSummary();
         }
 
         function getSharedAudioContext() {
-            if (!universalAudioContext) universalAudioContext = new (window.AudioContext || window.webkitAudioContext)();
-            if (universalAudioContext.state === 'suspended') universalAudioContext.resume();
+            if (!universalAudioContext) {
+                universalAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (universalAudioContext.state === 'suspended') {
+                universalAudioContext.resume();
+            }
             return universalAudioContext;
         }
 
+        function resetDefaultSeats() {
+            seats = [
+                { id: 'S1', name: 'S1', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 },
+                { id: 'S2', name: 'S2', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 },
+                { id: 'S3', name: 'S3', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 },
+                { id: 'S4', name: 'S4', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 },
+                { id: 'S5', name: 'S5', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 }
+            ];
+            saveState();
+        }
+
         function saveState() {
-            localStorage.setItem('gt_premium_seats', JSON.stringify(seats));
+            localStorage.setItem('gt_s5_seats_luxury', JSON.stringify(seats));
+            localStorage.setItem('gt_s5_logs_luxury', JSON.stringify(logs));
+        }
+
+        function sendSystemNotification(title, options) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, options);
+            }
+        }
+
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                showToast("Push notification is not supported by your browser.", "warning");
+                return;
+            }
+            Notification.requestPermission().then(permission => {
+                updateNotificationStatus();
+                if (permission === "granted") {
+                    showToast("👑 VIP Room System notifications authorized!", "success");
+                }
+            });
+        }
+
+        function updateNotificationStatus() {
+            const btn = document.getElementById('notifyBtn');
+            const icon = document.getElementById('notifyIcon');
+            const text = document.getElementById('notifyTxt');
+
+            if (!("Notification" in window)) {
+                text.innerText = "NO SUPPORT";
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                icon.className = "fa-solid fa-circle-check text-green-400";
+                text.innerText = "ALARM SECURED";
+                btn.classList.add('border-emerald-800/40', 'bg-emerald-950/20');
+            } else if (Notification.permission === "denied") {
+                icon.className = "fa-solid fa-triangle-exclamation text-red-500";
+                text.innerText = "NOTIFICATIONS BLOCKED";
+                btn.classList.add('border-red-800/40', 'bg-red-950/20');
+            }
         }
 
         function triggerMobileVibration(pattern) {
@@ -293,37 +442,34 @@
         }
 
         /* ------------------------------------------------------------
-           VOICE COMMAND AI (MILO) - SMART HINGLISH PARSER
+           VOICE COMMAND PROCESSOR - ZERO ERROR DYNAMIC PARSER
         ------------------------------------------------------------ */
         function initVoiceAI() {
-            const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (SpeechRecognitionAPI) {
-                speechRecognition = new SpeechRecognitionAPI();
+            const SpeechAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechAPI) {
+                speechRecognition = new SpeechAPI();
                 speechRecognition.continuous = true;
                 speechRecognition.interimResults = false;
-                speechRecognition.lang = 'hi-IN'; // Handles English and Hindi accurately in India
+                speechRecognition.lang = 'hi-IN'; // Optimized to match Hinglish accent
 
-                speechRecognition.onresult = (event) => {
-                    const lastResultIndex = event.results.length - 1;
-                    let transcript = event.results[lastResultIndex][0].transcript.toLowerCase().trim();
-                    console.log("🗣️ Voice Heard:", transcript);
-                    showToast(`🗣️ AI Heard: "${transcript}"`, "info"); // User ko dikhane ke liye ki AI ne kya suna
-                    parseVoiceCommand(transcript);
+                speechRecognition.onresult = function(event) {
+                    const lastIndex = event.results.length - 1;
+                    const originalTranscript = event.results[lastIndex][0].transcript;
+                    
+                    console.log("🗣️ Raw voice input:", originalTranscript);
+                    document.getElementById('voiceHeardText').innerText = `"${originalTranscript}"`;
+                    
+                    // Run parser
+                    parseAndExecuteVoice(originalTranscript);
                 };
 
-                speechRecognition.onerror = (event) => {
-                    console.warn("Speech Recognition Error:", event.error);
-                    if (event.error === 'not-allowed') {
-                        showToast("⚠️ Mic permission denied! Browser settings me ja kar Microphone Allow karein.", "danger");
-                        isVoiceListening = false;
-                        autoRestartVoice = false;
-                        updateVoiceUIIcon(false);
-                    }
+                speechRecognition.onerror = function(event) {
+                    console.warn("Speech API Error event:", event.error);
                 };
 
-                speechRecognition.onend = () => {
+                speechRecognition.onend = function() {
                     if (autoRestartVoice) {
-                        try { speechRecognition.start(); } catch(e){} // Restart to keep continuous listening
+                        try { speechRecognition.start(); } catch(e){}
                     } else {
                         updateVoiceUIIcon(false);
                     }
@@ -335,170 +481,276 @@
 
         function toggleContinuousMic() {
             if (!speechRecognition) {
-                showToast("Aapka browser Voice Recognition support nahi karta.", "danger");
+                showToast("Aapka hardware speech translation engine support nahi karta.", "danger");
                 return;
             }
 
             if (isVoiceListening) {
-                // Turn OFF
                 isVoiceListening = false;
                 autoRestartVoice = false;
                 speechRecognition.stop();
                 updateVoiceUIIcon(false);
-                showToast("🎙️ Milo Auto-Voice <b>OFF</b> kar di gayi hai.", "info");
+                document.getElementById('voiceHeardText').innerText = '"Waiting for command... Microphone band hai"';
+                document.getElementById('voiceResultText').innerText = 'None';
+                showToast("🎙️ Milo AI Standby Mode par chala gaya hai.", "info");
             } else {
-                // Turn ON
                 isVoiceListening = true;
                 autoRestartVoice = true;
-                getSharedAudioContext(); // Pre-warm audio engine via user gesture
+                getSharedAudioContext(); // warmup context via user tap
                 try { speechRecognition.start(); } catch(e){}
                 updateVoiceUIIcon(true);
-                showToast("🎙️ Milo Auto-Voice <b>ON</b>. Ab aap dur se phone ko command de sakte hain. E.g. 'S1 chalu karo 2 ghante ke liye'", "success");
+                showToast("🎙️ Milo AI active! Aap dur se commands de sakte hain.", "success");
             }
         }
 
-        function updateVoiceUIIcon(isActive) {
+        function updateVoiceUIIcon(listening) {
             const icon = document.getElementById('aiMicIcon');
             const txt = document.getElementById('aiMicTxt');
             const ring = document.getElementById('aiMicRing');
-            const btn = document.getElementById('aiMicBtn');
+            const dot = document.getElementById('aiMicStatusDot');
+            const dotInner = document.getElementById('aiMicStatusDotInner');
+            const label = document.getElementById('miloStatusLabel');
 
-            if (isActive) {
-                icon.className = "fa-solid fa-microphone text-green-400 animate-pulse";
-                txt.innerHTML = "Milo: Listening...";
-                txt.className = "text-green-400";
+            if (listening) {
+                icon.className = "fa-solid fa-microphone text-yellow-500 animate-pulse";
+                txt.innerText = "MILO AI: LISTENING";
+                txt.className = "text-yellow-500 font-extrabold";
                 ring.classList.remove('hidden');
-                btn.className = "relative bg-black text-[10px] px-4 py-2.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-2 transition-all border border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.2)]";
+                dot.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75";
+                dotInner.className = "relative inline-flex rounded-full h-2 w-2 bg-yellow-500";
+                label.innerText = "Milo is Listening...";
+                label.className = "text-[8px] text-yellow-500 font-black uppercase tracking-widest animate-pulse";
             } else {
-                icon.className = "fa-solid fa-microphone-slash text-slate-500";
-                txt.innerHTML = "Milo Auto-Voice: OFF";
-                txt.className = "text-slate-400";
+                icon.className = "fa-solid fa-microphone-slash text-slate-400";
+                txt.innerText = "MILO AI: STANDBY";
+                txt.className = "text-slate-300";
                 ring.classList.add('hidden');
-                btn.className = "relative bg-black/60 hover:bg-black text-[10px] px-4 py-2.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-2 transition-all border border-slate-700 shadow-lg";
+                dot.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-500 opacity-75";
+                dotInner.className = "relative inline-flex rounded-full h-2 w-2 bg-slate-500";
+                label.innerText = "System Ready";
+                label.className = "text-[8px] text-slate-500 font-bold uppercase tracking-widest";
             }
         }
 
-        function parseVoiceCommand(text) {
-            // Mute Command Detection
-            if (text.includes('mute') || text.includes('band karo') && text.includes('alarm') || text.includes('shant')) {
+        // ADVANCED PHONETIC DECODER AND COMMAND IMPLEMENTER
+        function parseAndExecuteVoice(transcript) {
+            const spokenText = transcript.toLowerCase();
+            
+            // Step 1: Normalize numbers & common phonetic variations
+            // S-series variations, English & Hindi numerals matching
+            let clean = spokenText
+                .replace(/एस/g, 's')
+                .replace(/screen/g, 's')
+                .replace(/सीट/g, 's')
+                .replace(/c/g, 's')
+                .replace(/वन/g, '1')
+                .replace(/टू/g, '2')
+                .replace(/थ्री/g, '3')
+                .replace(/फोर/g, '4')
+                .replace(/फाइव/g, '5')
+                .replace(/सिक्स/g, '6')
+                .replace(/सेवन/g, '7')
+                .replace(/एट/g, '8')
+                .replace(/नाइन/g, '9')
+                .replace(/one/g, '1')
+                .replace(/two/g, '2')
+                .replace(/three/g, '3')
+                .replace(/four/g, '4')
+                .replace(/five/g, '5')
+                .replace(/six/g, '6')
+                .replace(/seven/g, '7')
+                .replace(/eight/g, '8')
+                .replace(/nine/g, '9')
+                .replace(/nine/g, '9');
+
+            // Strip spaces to match alphanumeric strings like "s1", "s9" easily
+            const spacesRemoved = clean.replace(/\s+/g, '');
+
+            console.log("🛠️ Normalized command:", clean, " | compacted:", spacesRemoved);
+
+            // Command Type mapping
+            let actionType = null;
+            if (clean.includes('start') || clean.includes('chalu') || clean.includes('shuru') || clean.includes('play') || clean.includes('चालू') || clean.includes('शुरू')) {
+                actionType = 'start';
+            } else if (clean.includes('stop') || clean.includes('band') || clean.includes('khatam') || clean.includes('clear') || clean.includes('reset') || clean.includes('बंद') || clean.includes('खत्म')) {
+                actionType = 'stop';
+            } else if (clean.includes('pause') || clean.includes('hold') || clean.includes('rok') || clean.includes('पॉज') || clean.includes('रोको') || clean.includes('रोक')) {
+                actionType = 'pause';
+            } else if (clean.includes('resume') || clean.includes('unpause') || clean.includes('wapas') || clean.includes('रिज़्यूम')) {
+                actionType = 'resume';
+            } else if (clean.includes('mute') || clean.includes('alarm band') || clean.includes('shant') || clean.includes('silent')) {
+                actionType = 'mute_all';
+            }
+
+            if (actionType === 'mute_all') {
                 muteAllAlarms();
-                playSiriConfirmSound();
+                document.getElementById('voiceResultText').innerText = "SUCCESS: ALL ALARMS MUTED";
+                playAIPipeSound();
                 return;
             }
 
-            // Target Seat Finder Logic
-            let targetSeat = null;
-            seats.forEach(s => {
-                const numericPart = s.name.replace(/\D/g, ''); 
-                
-                // Smart phonetic dictionary so it catches bad pronunciation
-                const matchers = [
-                    s.name.toLowerCase(), 
-                    `s ${numericPart}`, `s${numericPart}`, `एस ${numericPart}`, 
-                    `ace ${numericPart}`, `seat ${numericPart}`, `screen ${numericPart}`, 
-                    `station ${numericPart}`, `yes ${numericPart}`, `is ${numericPart}`, `as ${numericPart}`
-                ];
-                
-                if (matchers.some(m => text.includes(m))) {
-                    targetSeat = s.id;
+            // Step 2: Dynamically scan for ANY existing seat configuration
+            let matchedSeat = null;
+            seats.forEach(seat => {
+                // Remove alphanumeric variations, "vip-1" -> "vip1", "S1" -> "s1"
+                const cleanSeatId = seat.id.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const cleanSeatName = seat.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+                if (spacesRemoved.includes(cleanSeatId) || spacesRemoved.includes(cleanSeatName)) {
+                    matchedSeat = seat;
                 }
             });
 
-            if (!targetSeat) return; // Ignore irrelevant conversations
-
-            // Action Finder
-            let action = null;
-            if (text.includes('start') || text.includes('shuru') || text.includes('chalu') || text.includes('set') || text.includes('laga')) action = 'start';
-            else if (text.includes('stop') || text.includes('khatam') || text.includes('band')) action = 'stop';
-            else if (text.includes('pause') || text.includes('rok')) action = 'pause';
-            else if (text.includes('resume') || text.includes('wapas') || text.includes('continue')) action = 'resume';
-
-            // Hours Parser (Added 30 minutes support)
-            let hours = 1;
-            if (text.match(/30\s*min/i) || text.match(/aadha/i) || text.match(/half/i) || text.match(/tis min/i) || text.match(/तीस मिनट/i)) hours = 0.5;
-            else if (text.match(/2\s*(hour|ghant|घंट)/i) || text.match(/do\s*ghant|two\s*hour/i)) hours = 2;
-            else if (text.match(/3\s*(hour|ghant|घंट)/i) || text.match(/teen\s*ghant|three\s*hour/i)) hours = 3;
-            else if (text.match(/4\s*(hour|ghant|घंट)/i) || text.match(/char\s*ghant|four\s*hour/i)) hours = 4;
-
-            // Execute mapped action
-            let commandSuccess = false;
-            const seatObj = seats.find(s => s.id === targetSeat);
-
-            if (action === 'start') {
-                if (!seatObj.isRunning) { quickStartSeat(targetSeat, hours); commandSuccess = true; }
-                else { showToast(`⚠️ I heard Start, but ${seatObj.name} is already running!`, "warning"); }
-            } 
-            else if (action === 'stop' && seatObj.isRunning) {
-                stopSeatSession(targetSeat, true); commandSuccess = true;
-            } 
-            else if (action === 'pause' && seatObj.isRunning && !seatObj.isPaused) {
-                pauseSeatSession(targetSeat); commandSuccess = true;
-            } 
-            else if (action === 'resume' && seatObj.isPaused) {
-                resumeSeatSession(targetSeat); commandSuccess = true;
+            if (!matchedSeat) {
+                document.getElementById('voiceResultText').innerText = "FAILED: Screen Not Recognized";
+                return;
             }
 
-            if (commandSuccess) playSiriConfirmSound();
+            // Step 3: Determine duration parameter (Supports 30 mins preset up to 4 hrs)
+            let durationMinutes = 60; // 1 hour baseline
+            let hrTarget = 1;
+
+            if (clean.includes('30') || clean.includes('aadha') || clean.includes('aadha ghanta') || clean.includes('half hour') || clean.includes('तीस मिनट') || clean.includes('आधा घंटा')) {
+                durationMinutes = 30;
+                hrTarget = 0.5;
+            } else if (clean.includes('2') || clean.includes('do ghant') || clean.includes('दो घंटे') || clean.includes('double hour')) {
+                durationMinutes = 120;
+                hrTarget = 2;
+            } else if (clean.includes('3') || clean.includes('teen ghant') || clean.includes('तीन घंटे')) {
+                durationMinutes = 180;
+                hrTarget = 3;
+            } else if (clean.includes('4') || clean.includes('char ghant') || clean.includes('चार घंटे')) {
+                durationMinutes = 240;
+                hrTarget = 4;
+            }
+
+            // Step 4: Execute targeted command safely
+            let successMessage = "";
+            let triggerExecution = false;
+
+            if (actionType === 'start') {
+                if (!matchedSeat.isRunning) {
+                    executeQuickStart(matchedSeat, durationMinutes, hrTarget);
+                    successMessage = `SUCCESS: STARTED ${matchedSeat.name} (${hrTarget}H)`;
+                    triggerExecution = true;
+                } else {
+                    successMessage = `ABORTED: ${matchedSeat.name} is already playing`;
+                }
+            } 
+            else if (actionType === 'stop') {
+                if (matchedSeat.isRunning) {
+                    stopSeatSession(matchedSeat.id, true);
+                    successMessage = `SUCCESS: STOPPED ${matchedSeat.name}`;
+                    triggerExecution = true;
+                }
+            } 
+            else if (actionType === 'pause') {
+                if (matchedSeat.isRunning && !matchedSeat.isPaused) {
+                    pauseSeatSession(matchedSeat.id);
+                    successMessage = `SUCCESS: PAUSED ${matchedSeat.name}`;
+                    triggerExecution = true;
+                }
+            } 
+            else if (actionType === 'resume') {
+                if (matchedSeat.isRunning && matchedSeat.isPaused) {
+                    resumeSeatSession(matchedSeat.id);
+                    successMessage = `SUCCESS: RESUMED ${matchedSeat.name}`;
+                    triggerExecution = true;
+                }
+            }
+
+            if (triggerExecution) {
+                playAIPipeSound();
+            }
+
+            document.getElementById('voiceResultText').innerText = successMessage || "FAILED: Action Not Matched";
         }
 
-        // Soft blip to let user know voice command worked
-        function playSiriConfirmSound() {
+        // Voice validation chime
+        function playAIPipeSound() {
             try {
                 const ctx = getSharedAudioContext();
                 let osc = ctx.createOscillator();
                 let gain = ctx.createGain();
                 osc.connect(gain);
                 gain.connect(ctx.destination);
-                osc.frequency.setValueAtTime(600, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-                osc.start(); osc.stop(ctx.currentTime + 0.15);
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.22);
+                osc.start(); osc.stop(ctx.currentTime + 0.22);
             } catch(e) {}
         }
 
 
         /* ------------------------------------------------------------
-           ALARM ENGINE & AUDIO
+           AUDIO SIREN ENGINE (High performance single context)
         ------------------------------------------------------------ */
         function startAudioAlert(seatId, type) {
             stopAudioAlert(seatId);
+
             try {
                 const ctx = getSharedAudioContext();
+                
                 if (type === 'warning') {
                     let interval = setInterval(() => {
-                        if (!activeSoundOscillators[seatId]) return clearInterval(interval);
+                        if (!activeSoundOscillators[seatId]) {
+                            clearInterval(interval);
+                            return;
+                        }
+                        
                         triggerMobileVibration([100, 50, 100]);
-                        let osc = ctx.createOscillator(); let gain = ctx.createGain();
-                        osc.connect(gain); gain.connect(ctx.destination);
+
+                        let osc = ctx.createOscillator();
+                        let gain = ctx.createGain();
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        
                         osc.frequency.setValueAtTime(880, ctx.currentTime);
                         gain.gain.setValueAtTime(0.15, ctx.currentTime);
                         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
-                        osc.start(); osc.stop(ctx.currentTime + 0.2);
+                        
+                        osc.start();
+                        osc.stop(ctx.currentTime + 0.2);
                     }, 3000);
+
                     activeSoundOscillators[seatId] = { interval };
                 } 
                 else if (type === 'danger') {
                     let interval = setInterval(() => {
-                        if (!activeSoundOscillators[seatId]) return clearInterval(interval);
+                        if (!activeSoundOscillators[seatId]) {
+                            clearInterval(interval);
+                            return;
+                        }
+
                         triggerMobileVibration([300, 100, 300, 100, 300]);
+
                         for (let b = 0; b < 3; b++) {
                             setTimeout(() => {
                                 if (!activeSoundOscillators[seatId]) return;
-                                let osc = ctx.createOscillator(); let gain = ctx.createGain();
-                                osc.connect(gain); gain.connect(ctx.destination);
+                                let osc = ctx.createOscillator();
+                                let gain = ctx.createGain();
+                                osc.connect(gain);
+                                gain.connect(ctx.destination);
+                                
                                 osc.type = 'sawtooth';
                                 osc.frequency.setValueAtTime(160, ctx.currentTime);
                                 osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.4); 
+                                
                                 gain.gain.setValueAtTime(0.3, ctx.currentTime);
                                 gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
-                                osc.start(); osc.stop(ctx.currentTime + 0.4);
+                                
+                                osc.start();
+                                osc.stop(ctx.currentTime + 0.4);
                             }, b * 350);
                         }
                     }, 1800);
+
                     activeSoundOscillators[seatId] = { interval };
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.warn(e);
+            }
         }
 
         function stopAudioAlert(seatId) {
@@ -508,38 +760,19 @@
             }
         }
 
-        function acknowledgeAlarm(seatId) {
-            const seat = seats.find(s => s.id === seatId);
-            if (!seat) return;
-            stopAudioAlert(seatId);
-            const now = Date.now();
-            const elapsedMinutes = Math.floor((now - seat.startTime) / 60000);
-            seat.acknowledgedMilestones[elapsedMinutes] = true;
-            const warningMarker = (seat.targetHours * 60) - 10;
-            if (Math.abs(elapsedMinutes - warningMarker) <= 3) seat.acknowledgedMilestones[warningMarker] = true;
-            seat.alarmState = 'none';
-            saveState();
-            renderWorkspaceCard(seat);
-            updateStatsSummary();
-            showToast(`🔔 Alarm muted for <b>${seat.name}</b>.`, "success");
-        }
-
-        function muteAllAlarms() {
-            seats.forEach(seat => { if (seat.alarmState !== 'none') acknowledgeAlarm(seat.id); });
-            showToast("🔇 Sabhi alarms successfully mute kar diye gaye hain.", "info");
-        }
-
 
         /* ------------------------------------------------------------
-           UI RENDER ENGINE
+           CORE UI BUILDER ENGINE (Zero-Lag Targeting)
         ------------------------------------------------------------ */
         function renderWorkspace() {
             const container = document.getElementById('screensWorkspace');
             container.innerHTML = '';
+
             seats.forEach(seat => {
                 const card = document.createElement('div');
                 card.id = `seat-card-${seat.id}`;
                 container.appendChild(card);
+                
                 renderWorkspaceCard(seat);
             });
         }
@@ -548,44 +781,55 @@
             const cardEl = document.getElementById(`seat-card-${seat.id}`);
             if (!cardEl) return;
 
-            let borderClass = "card-idle";
+            let borderClass = "glow-border-idle";
             let headerColor = "text-slate-400";
             
             if (seat.isRunning) {
                 if (seat.isPaused) {
-                    borderClass = "card-paused";
+                    borderClass = "glow-border-paused";
                     headerColor = "text-blue-400 font-extrabold drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]";
                 } else if (seat.alarmState === 'danger') {
-                    borderClass = "card-danger";
-                    headerColor = "text-red-400 font-black drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]";
+                    borderClass = "glow-border-danger";
+                    headerColor = "text-red-400 font-black animate-pulse drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]";
                 } else if (seat.alarmState === 'warning') {
-                    borderClass = "card-warning";
+                    borderClass = "glow-border-warning";
                     headerColor = "text-yellow-400 font-black drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]";
                 } else {
-                    borderClass = "card-active";
-                    headerColor = "gold-text font-extrabold";
+                    borderClass = "glow-border-active";
+                    headerColor = "gold-gradient-text font-extrabold";
                 }
             }
 
-            let badgeHTML = `<span class="text-[8px] font-black bg-white/5 text-slate-500 px-2.5 py-1 rounded-full border border-white/10 uppercase tracking-widest">Idle</span>`;
+            let badgeHTML = `<span class="text-[9px] font-black bg-slate-950 text-slate-500 px-2 py-1 rounded-md border border-slate-850">OFFLINE</span>`;
             if (seat.isRunning) {
-                if (seat.isPaused) badgeHTML = `<span class="text-[8px] font-black bg-blue-500/20 text-blue-300 px-2.5 py-1 rounded-full border border-blue-500/30 uppercase tracking-widest flex items-center gap-1.5"><i class="fa-solid fa-pause animate-pulse"></i> Paused</span>`;
-                else if (seat.alarmState === 'danger') badgeHTML = `<span class="text-[8px] font-black bg-red-500/20 text-red-300 px-2.5 py-1 rounded-full border border-red-500/30 uppercase tracking-widest flex items-center gap-1.5"><i class="fa-solid fa-bolt animate-spin text-red-500"></i> Time Up</span>`;
-                else if (seat.alarmState === 'warning') badgeHTML = `<span class="text-[8px] font-black bg-yellow-500/20 text-yellow-300 px-2.5 py-1 rounded-full border border-yellow-500/30 uppercase tracking-widest flex items-center gap-1.5"><i class="fa-solid fa-hourglass-half animate-bounce"></i> 10m Left</span>`;
-                else badgeHTML = `<span class="text-[8px] font-black bg-green-500/10 text-green-400 px-2.5 py-1 rounded-full border border-green-500/30 uppercase tracking-widest">Active</span>`;
+                if (seat.isPaused) {
+                    badgeHTML = `<span class="text-[9px] font-black bg-blue-950/60 text-blue-400 px-2 py-1 rounded-md border border-blue-800/40 flex items-center gap-1"><i class="fa-solid fa-circle-pause animate-pulse"></i> PAUSED</span>`;
+                } else if (seat.alarmState === 'danger') {
+                    badgeHTML = `<span class="text-[9px] font-black bg-red-950/60 text-red-400 px-2 py-1 rounded-md border border-red-800/40 flex items-center gap-1"><i class="fa-solid fa-radiation animate-spin text-red-500"></i> TIME UP</span>`;
+                } else if (seat.alarmState === 'warning') {
+                    badgeHTML = `<span class="text-[9px] font-black bg-yellow-950/60 text-yellow-400 px-2 py-1 rounded-md border border-yellow-800/40 flex items-center gap-1"><i class="fa-solid fa-hourglass-start animate-bounce"></i> 10M ALERT</span>`;
+                } else {
+                    badgeHTML = `<span class="text-[9px] font-black bg-purple-950/60 text-purple-400 px-2 py-1 rounded-md border border-purple-800/40">PLAYING</span>`;
+                }
             }
 
             let bodyHTML = "";
             if (!seat.isRunning) {
                 bodyHTML = `
-                    <div class="my-3">
-                        <div class="grid grid-cols-3 gap-2">
-                            <button onclick="quickStartSeat('${seat.id}', 0.5)" class="bg-white/5 hover:bg-white/10 active:scale-95 text-[10px] text-white py-3.5 rounded-xl font-bold transition-all border border-white/10">30 Min</button>
-                            <button onclick="quickStartSeat('${seat.id}', 1)" class="bg-white/5 hover:bg-white/10 active:scale-95 text-[10px] text-white py-3.5 rounded-xl font-bold transition-all border border-white/10">1 Hour</button>
-                            <button onclick="quickStartSeat('${seat.id}', 2)" class="bg-white/5 hover:bg-white/10 active:scale-95 text-[10px] text-white py-3.5 rounded-xl font-bold transition-all border border-white/10">2 Hours</button>
+                    <div class="my-2">
+                        <div class="grid grid-cols-3 gap-1.5">
+                            <button onclick="quickStartSeat('${seat.id}', 0.5)" class="bg-gradient-to-tr from-indigo-950 to-indigo-800 hover:from-indigo-900 active:scale-95 text-[10px] text-white py-3.5 rounded-xl font-bold transition-all border border-indigo-700/30">
+                                30m
+                            </button>
+                            <button onclick="quickStartSeat('${seat.id}', 1)" class="bg-gradient-to-tr from-purple-950 to-purple-800 hover:from-purple-900 active:scale-95 text-[10px] text-white py-3.5 rounded-xl font-bold transition-all border border-purple-700/30">
+                                1 H
+                            </button>
+                            <button onclick="quickStartSeat('${seat.id}', 2)" class="bg-gradient-to-tr from-pink-950 to-pink-800 hover:from-pink-900 active:scale-95 text-[10px] text-white py-3.5 rounded-xl font-bold transition-all border border-pink-700/30">
+                                2 H
+                            </button>
                         </div>
-                        <button onclick="openCustomModal('${seat.id}')" class="w-full mt-2.5 bg-transparent hover:bg-white/5 text-[9px] text-slate-400 hover:text-white py-2.5 rounded-xl transition-all font-bold uppercase tracking-widest">
-                            <i class="fa-solid fa-sliders text-yellow-600"></i> Custom Setup
+                        <button onclick="openCustomModal('${seat.id}')" class="w-full mt-2.5 bg-slate-950/80 hover:bg-slate-900 text-[9px] text-slate-400 hover:text-white py-2 rounded-xl transition-all border border-slate-800/50 font-bold uppercase tracking-widest">
+                            <i class="fa-solid fa-sliders text-yellow-600"></i> Setup Custom
                         </button>
                     </div>
                 `;
@@ -598,74 +842,87 @@
                 const formattedTimer = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
                 let hourTabsHTML = "";
+                // Preset targets include 30m (0.5), 1H, 2H, 3H
                 [0.5, 1, 2, 3].forEach(hr => {
                     const isCurrentTarget = seat.targetHours === hr;
-                    let btnStyle = "bg-transparent text-slate-500 border-white/10 hover:text-white";
+                    let btnStyle = "bg-slate-950 text-slate-400 hover:bg-slate-800";
                     if (isCurrentTarget) {
-                        btnStyle = seat.isPaused ? "bg-blue-600/20 text-blue-400 border-blue-500/50 shadow-[0_0_10px_rgba(59,130,246,0.3)]" : "bg-yellow-600/20 gold-text border-yellow-500/50 shadow-[0_0_15px_rgba(212,175,55,0.2)]";
+                        btnStyle = seat.isPaused 
+                            ? "bg-blue-600 text-white font-black shadow-[0_0_10px_rgba(59,130,246,0.4)]" 
+                            : "bg-purple-600 text-white font-black shadow-[0_0_10px_rgba(168,85,247,0.4)]";
                     }
-                    const label = hr === 0.5 ? "30m" : `${hr}H`;
-                    hourTabsHTML += `<button onclick="changeTargetHour('${seat.id}', ${hr})" class="py-1 rounded border text-[10px] font-bold transition-all ${btnStyle}">${label}</button>`;
+                    const displayLabel = hr === 0.5 ? "30m" : `${hr}H`;
+                    hourTabsHTML += `<button onclick="changeTargetHour('${seat.id}', ${hr})" class="py-1 rounded-lg border border-slate-800 text-[10px] font-black ${btnStyle}">${displayLabel}</button>`;
                 });
 
                 bodyHTML = `
                     <div class="my-2 flex flex-col justify-between flex-grow">
-                        <div class="bg-black/40 rounded-xl p-3 text-center border border-white/5 shadow-inner relative">
-                            <div class="text-3xl font-luxury font-black tracking-widest ${seat.isPaused ? 'text-blue-400' : 'gold-text'} drop-shadow-md" id="raw-timer-${seat.id}">${formattedTimer}</div>
-                            <div class="text-[7px] font-black text-slate-500 uppercase tracking-widest mt-1.5 pt-1.5 border-t border-white/5">
-                                Set Target: ${seat.targetHours === 0.5 ? '30m' : seat.targetHours + 'H'}
+                        <div class="bg-slate-950 rounded-xl p-2.5 text-center border border-slate-850 shadow-inner">
+                            <div class="text-3xl font-luxury font-black tracking-widest ${seat.isPaused ? 'text-blue-400' : 'text-purple-400'}" id="raw-timer-${seat.id}">${formattedTimer}</div>
+                            <div class="flex justify-center text-[8px] font-bold text-slate-500 uppercase tracking-wider mt-1 border-t border-slate-900/60 pt-1">
+                                <span>Target Milestone: <b>${seat.targetHours === 0.5 ? '30m' : seat.targetHours + 'H'}</b></span>
                             </div>
                         </div>
 
-                        <div class="mt-3">
-                            <div class="grid grid-cols-4 gap-1.5">${hourTabsHTML}</div>
+                        <div class="mt-2.5">
+                            <p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1">Shift Target Milestone</p>
+                            <div class="grid grid-cols-4 gap-1">
+                                ${hourTabsHTML}
+                            </div>
                         </div>
 
                         ${seat.alarmState !== 'none' ? `
-                            <div class="mt-3">
-                                <button onclick="acknowledgeAlarm('${seat.id}')" class="w-full bg-gradient-to-r from-red-800 to-red-600 text-white text-[10px] font-black uppercase tracking-widest py-3 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(220,38,38,0.4)] transition-all">
-                                    <i class="fa-solid fa-bell-slash"></i> Mute Alarm
+                            <div class="mt-2.5">
+                                <button onclick="acknowledgeAlarm('${seat.id}')" class="w-full bg-gradient-to-r from-red-600 to-pink-600 text-white text-[11px] font-black uppercase py-2.5 rounded-xl flex items-center justify-center gap-1.5 animate-bounce shadow-lg">
+                                    <i class="fa-solid fa-volume-xmark"></i> MUTE SIREN
                                 </button>
                             </div>
                         ` : ''}
 
-                        <div class="mt-3 flex gap-2">
+                        <!-- Action Controls Row for Pause/Resume Feature -->
+                        <div class="mt-2.5 flex gap-2">
                             ${seat.isPaused ? `
-                                <button onclick="resumeSeatSession('${seat.id}')" class="w-1/2 bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/30 text-blue-300 text-[9px] py-2 rounded-xl font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all">
+                                <button onclick="resumeSeatSession('${seat.id}')" class="w-1/2 bg-gradient-to-tr from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white text-[10px] py-2 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-1">
                                     <i class="fa-solid fa-play animate-pulse"></i> Resume
                                 </button>
                             ` : `
-                                <button onclick="pauseSeatSession('${seat.id}')" class="w-1/2 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 text-[9px] py-2 rounded-xl font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all">
-                                    <i class="fa-solid fa-pause"></i> Pause
+                                <button onclick="pauseSeatSession('${seat.id}')" class="w-1/2 bg-yellow-600/10 hover:bg-yellow-600/30 hover:text-yellow-400 border border-yellow-500/20 text-yellow-500 text-[10px] py-2 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-pause"></i> Pause (Light)
                                 </button>
                             `}
-                            <button onclick="stopSeatSession('${seat.id}')" class="w-1/2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-[9px] py-2 rounded-xl font-bold uppercase tracking-widest transition-all">
-                                <i class="fa-solid fa-power-off"></i> Stop
+                            <button onclick="stopSeatSession('${seat.id}', true)" class="w-1/2 bg-red-950/20 hover:bg-red-950 hover:text-red-400 border border-red-900/40 text-red-500 text-[10px] py-2 rounded-xl font-black uppercase tracking-widest">
+                                🛑 Stop
                             </button>
                         </div>
                     </div>
                 `;
             }
 
-            cardEl.className = `${borderClass} glass-card p-5 rounded-[1.25rem] relative flex flex-col justify-between min-h-[240px] transition-all`;
+            cardEl.className = `${borderClass} luxury-glass-card p-4 rounded-2xl relative flex flex-col justify-between min-h-[225px] shadow-2xl`;
             cardEl.innerHTML = `
-                <div class="flex justify-between items-center pb-3 border-b border-white/10">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-crown text-[10px] ${seat.isPaused ? 'text-blue-500 opacity-50' : 'text-yellow-600'}"></i>
-                        <span class="text-xl font-luxury font-black uppercase ${headerColor} tracking-widest">${seat.name}</span>
+                <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-desktop text-[11px] ${seat.isPaused ? 'text-blue-500 animate-pulse' : 'text-purple-500'}"></i>
+                        <span class="text-md font-luxury font-black uppercase ${headerColor} tracking-wider">${seat.name}</span>
                     </div>
-                    <div class="flex items-center gap-2">
+                    
+                    <div class="flex items-center gap-1.5">
                         ${badgeHTML}
-                        ${!['S1','S2','S3','S4','S5'].includes(seat.id) ? `<button onclick="deleteCustomScreen('${seat.id}')" class="text-slate-600 hover:text-red-500 text-[10px]"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                        ${!['S1','S2','S3','S4','S5'].includes(seat.id) ? `
+                            <button onclick="deleteCustomScreen('${seat.id}')" class="text-slate-600 hover:text-red-500 transition-all text-[11px] ml-1.5" title="Screen Delete">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        ` : ''}
                     </div>
                 </div>
-                <div class="flex-grow flex flex-col justify-between mt-2">${bodyHTML}</div>
+
+                <div class="flex-grow flex flex-col justify-between mt-1.5">
+                    ${bodyHTML}
+                </div>
             `;
         }
 
-        /* ------------------------------------------------------------
-           TICKER & ACTIONS LOGIC
-        ------------------------------------------------------------ */
+        // TIMER INTERVAL EXECUTOR (Continuous checks)
         function gameTimerTick() {
             const now = Date.now();
             let stateModified = false;
@@ -675,62 +932,129 @@
                     if (seat.isPaused) {
                         const timerEl = document.getElementById(`raw-timer-${seat.id}`);
                         if (timerEl) {
-                            const tl = seat.remainingMs;
-                            const h = Math.floor((tl % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                            const m = Math.floor((tl % (1000 * 60 * 60)) / (1000 * 60));
-                            const s = Math.floor((tl % (1000 * 60)) / 1000);
+                            const timeLeft = seat.remainingMs;
+                            const h = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                            const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
                             timerEl.innerText = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                            timerEl.className = "text-2xl font-black tracking-widest font-mono text-blue-400 animate-pulse";
                         }
                         return;
                     }
 
-                    const elapsedMins = Math.floor((now - seat.startTime) / 60000);
-                    const limit = seat.initialDuration;
-                    const warningMark = limit - 10;
+                    const elapsedMinutes = Math.floor((now - seat.startTime) / 60000);
+                    const totalMinsLimit = seat.initialDuration;
+                    const warningMinuteMarker = totalMinsLimit - 10;
                     
-                    if (elapsedMins >= warningMark && elapsedMins < limit) {
-                        if (!seat.acknowledgedMilestones[warningMark] && seat.alarmState !== 'warning') {
-                            seat.alarmState = 'warning'; stateModified = true;
+                    // 1. WARNING Trigger
+                    if (elapsedMinutes >= warningMinuteMarker && elapsedMinutes < totalMinsLimit) {
+                        if (!seat.acknowledgedMilestones[warningMinuteMarker] && seat.alarmState !== 'warning') {
+                            seat.alarmState = 'warning';
+                            stateModified = true;
                             startAudioAlert(seat.id, 'warning');
-                            showToast(`⚠️ Warning! ${seat.name} ka time 10 min bacha hai.`, "warning");
+                            sendSystemNotification(`⚠️ TAB GAMEPAD Alert: ${seat.name}`, { body: `${seat.name} ka time over hone me 10 min bache hain.` });
+                            showToast(`⚠️ Alert! Station <b>${seat.name}</b> ke play limits me sirf 10 min bache hain!`, "warning");
                         }
                     }
 
-                    if (elapsedMins >= limit) {
-                        if (!seat.acknowledgedMilestones[limit] && seat.alarmState !== 'danger') {
-                            seat.alarmState = 'danger'; stateModified = true;
+                    // 2. CRITICAL SIREN Trigger
+                    if (elapsedMinutes >= totalMinsLimit) {
+                        if (!seat.acknowledgedMilestones[totalMinsLimit] && seat.alarmState !== 'danger') {
+                            seat.alarmState = 'danger';
+                            stateModified = true;
                             startAudioAlert(seat.id, 'danger');
-                            showToast(`🚨 TIME OVER! ${seat.name} game khatam!`, "danger");
+                            sendSystemNotification(`🚨 TIME OVER: ${seat.name}`, { body: `${seat.name} ka time khatam ho gaya hai!` });
+                            showToast(`🚨 BOOM BOOM! Screen <b>${seat.name}</b> ka game complete ho gaya!`, "danger");
                         }
                     }
 
+                    // Selective timer updating
                     const timerEl = document.getElementById(`raw-timer-${seat.id}`);
                     if (timerEl) {
-                        const tl = Math.max(0, seat.endTime - now);
-                        const h = Math.floor((tl % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const m = Math.floor((tl % (1000 * 60 * 60)) / (1000 * 60));
-                        const s = Math.floor((tl % (1000 * 60)) / 1000);
-                        timerEl.innerText = tl <= 0 ? "TIME UP" : `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                        const timeLeft = Math.max(0, seat.endTime - now);
+                        const h = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                        const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
                         
-                        if (tl <= 0) timerEl.className = "text-3xl font-luxury font-black tracking-widest text-red-500 animate-pulse drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]";
-                        else if (tl <= 600000) timerEl.className = "text-3xl font-luxury font-black tracking-widest text-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.3)]";
-                        else timerEl.className = "text-3xl font-luxury font-black tracking-widest gold-text drop-shadow-[0_0_5px_rgba(212,175,55,0.2)]";
+                        timerEl.innerText = timeLeft <= 0 ? "BOM! TIME UP" : `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                        
+                        if (timeLeft <= 0) {
+                            timerEl.className = "text-2xl font-black tracking-widest font-mono text-red-500 animate-pulse";
+                        } else if (timeLeft <= 600000) {
+                            timerEl.className = "text-2xl font-black tracking-widest font-mono text-yellow-400";
+                        } else {
+                            timerEl.className = "text-2xl font-black tracking-widest font-mono text-purple-400";
+                        }
                     }
                 }
             });
 
-            if (stateModified) { saveState(); renderWorkspace(); updateStatsSummary(); }
+            if (stateModified) {
+                saveState();
+                renderWorkspace();
+                updateStatsSummary();
+            }
         }
 
-        // Custom Modal Logic
-        function openModals(modalId) {
+        // PAUSE TIMER (Power Cut protection)
+        function pauseSeatSession(seatId) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat || !seat.isRunning || seat.isPaused) return;
+
+            stopAudioAlert(seatId);
+            cancelBackgroundAlarms(seatId);
+
+            const now = Date.now();
+            seat.remainingMs = Math.max(0, seat.endTime - now);
+            seat.isPaused = true;
+            seat.alarmState = 'none';
+
+            saveState();
+            renderWorkspaceCard(seat);
+            updateStatsSummary();
+            
+            triggerMobileVibration([100, 100]);
+            showToast(`🔌 Light chali gayi! Seat <b>${seat.name}</b> ka timer <b>PAUSED</b> (surakshit) hai.`, "warning");
+        }
+
+        // RESUME TIMER (Power Restored)
+        function resumeSeatSession(seatId) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat || !seat.isRunning || !seat.isPaused) return;
+
+            const now = Date.now();
+            seat.endTime = now + seat.remainingMs;
+            seat.startTime = seat.endTime - (seat.initialDuration * 60000);
+            seat.isPaused = false;
+
+            saveState();
+
+            renderWorkspaceCard(seat);
+            updateStatsSummary();
+
+            triggerMobileVibration([150, 50, 150]);
+            showToast(`💡 Light aa gayi! Seat <b>${seat.name}</b> ka timer fir se <b>RESUMED</b> hai.`, "success");
+        }
+
+        // MODAL MANAGEMENT
+        function openAddScreenModal() {
             document.getElementById('modalOverlay').classList.remove('hidden');
-            // small delay for transition
             setTimeout(() => {
                 document.getElementById('modalOverlay').classList.remove('opacity-0');
-                document.getElementById(modalId).classList.remove('hidden');
-                document.getElementById(modalId).classList.remove('scale-95');
-            }, 10);
+                document.getElementById('addScreenModal').classList.remove('hidden');
+                document.getElementById('addScreenModal').classList.remove('scale-95');
+                document.getElementById('addScreenName').focus();
+            }, 50);
+        }
+
+        function openCustomModal(seatId) {
+            document.getElementById('customModalSeatId').value = seatId;
+            document.getElementById('modalOverlay').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('modalOverlay').classList.remove('opacity-0');
+                document.getElementById('customTimeModal').classList.remove('hidden');
+                document.getElementById('customTimeModal').classList.remove('scale-95');
+            }, 50);
         }
 
         function closeModals() {
@@ -741,53 +1065,158 @@
                 document.getElementById('modalOverlay').classList.add('hidden');
                 document.getElementById('addScreenModal').classList.add('hidden');
                 document.getElementById('customTimeModal').classList.add('hidden');
-            }, 300);
-        }
-
-        function openAddScreenModal() { openModals('addScreenModal'); document.getElementById('addScreenName').focus(); }
-        function openCustomModal(seatId) { 
-            const seat = seats.find(s => s.id === seatId); if(!seat) return;
-            document.getElementById('customModalSeatId').value = seatId;
-            openModals('customTimeModal'); 
+            }, 250);
         }
 
         function handleAddNewScreen(e) {
             e.preventDefault();
             const name = document.getElementById('addScreenName').value.trim().toUpperCase();
-            if (!name) return;
-            if (seats.some(s => s.name === name)) return showToast(`${name} pehle se added hai!`, "danger");
 
-            seats.push({ id: 'Seat-'+Date.now(), name: name, isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, alarmState: 'none', acknowledgedMilestones: {}, isPaused: false, remainingMs: 0 });
-            saveState(); renderWorkspace(); updateStatsSummary(); closeModals();
-            document.getElementById('addScreenName').value = '';
-            showToast(`🎉 ${name} screen VIP lounge me jodh di gayi hai.`, "success");
+            if (!name) return;
+
+            if (seats.some(s => s.name === name)) {
+                showToast(`Screen <b>${name}</b> pehle se hi setup me shamil hai!`, "danger");
+                return;
+            }
+
+            const newSeat = {
+                id: 'Seat-' + Date.now(),
+                name: name,
+                isRunning: false,
+                startTime: null,
+                endTime: null,
+                targetHours: 1,
+                initialDuration: 60,
+                alarmState: 'none',
+                acknowledgedMilestones: {},
+                isPaused: false,
+                remainingMs: 0
+            };
+
+            seats.push(newSeat);
+            saveState();
+            
+            renderWorkspace();
+            updateStatsSummary();
+            closeModals();
+            showToast(`🎉 Nayi Screen <b>${name}</b> setup dashboard me add ho chuki hai!`, "success");
         }
 
+        // Delete custom screen
         function deleteCustomScreen(seatId) {
-            if (confirm("Kya sach me is screen ko delete karein?")) {
-                stopAudioAlert(seatId); seats = seats.filter(s => s.id !== seatId);
-                saveState(); renderWorkspace(); updateStatsSummary();
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat) return;
+
+            const check = confirm(`Kya aap sach me screen ${seat.name} ko delete karna chahte hain?`);
+            if (check) {
+                stopAudioAlert(seatId);
+                seats = seats.filter(s => s.id !== seatId);
+                saveState();
+                renderWorkspace();
+                updateStatsSummary();
+                showToast(`🗑️ Screen deleted.`, "info");
             }
         }
 
-        function quickStartSeat(seatId, hours) {
-            const seat = seats.find(s => s.id === seatId); if (!seat) return;
-            seat.isRunning = true; seat.startTime = Date.now();
-            seat.initialDuration = hours * 60;
-            seat.endTime = seat.startTime + (seat.initialDuration * 60000);
-            seat.targetHours = hours; seat.alarmState = 'none'; seat.acknowledgedMilestones = {}; seat.isPaused = false; seat.remainingMs = seat.initialDuration * 60000;
-            saveState(); renderWorkspaceCard(seat); updateStatsSummary();
-            triggerMobileVibration([150, 50, 150]); showToast(`▶️ ${seat.name} chalu ho gaya (${hours} Hr).`, "success");
+        // Executer helper
+        function executeQuickStart(seat, durationMinutes, hours) {
+            const now = Date.now();
+            seat.isRunning = true;
+            seat.startTime = now;
+            seat.endTime = now + (durationMinutes * 60 * 1000);
+            seat.targetHours = hours;
+            seat.initialDuration = durationMinutes;
+            seat.alarmState = 'none';
+            seat.acknowledgedMilestones = {};
+            seat.isPaused = false;
+            seat.remainingMs = durationMinutes * 60 * 1000;
+
+            saveState();
+            renderWorkspaceCard(seat);
+            updateStatsSummary();
         }
 
+        function quickStartSeat(seatId, hours) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat) return;
+
+            const durationMinutes = hours * 60;
+            executeQuickStart(seat, durationMinutes, hours);
+            
+            triggerMobileVibration([150, 50, 150]);
+            showToast(`🚀 Screen <b>${seat.name}</b> active! Target: <b>${hours === 0.5 ? '30m' : hours + 'H'}</b>.`, "success");
+        }
+
+        // Target modification on dynamic hours click
         function changeTargetHour(seatId, newHours) {
-            const seat = seats.find(s => s.id === seatId); if (!seat || !seat.isRunning) return;
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat || !seat.isRunning) return;
+
             stopAudioAlert(seatId);
-            seat.targetHours = newHours; seat.initialDuration = newHours * 60;
-            seat.endTime = seat.startTime + (seat.initialDuration * 60000);
-            seat.alarmState = 'none'; seat.acknowledgedMilestones = {};
-            seat.remainingMs = Math.max(0, seat.endTime - Date.now());
-            saveState(); renderWorkspaceCard(seat); updateStatsSummary();
+
+            const newTotalDurationMinutes = newHours * 60;
+
+            seat.targetHours = newHours;
+            seat.initialDuration = newTotalDurationMinutes;
+            seat.endTime = seat.startTime + (newTotalDurationMinutes * 60 * 1000);
+            seat.alarmState = 'none';
+            seat.acknowledgedMilestones = {};
+
+            const now = Date.now();
+            seat.remainingMs = Math.max(0, seat.endTime - now);
+
+            saveState();
+
+            renderWorkspaceCard(seat);
+            updateStatsSummary();
+            showToast(`⏱️ ${seat.name} target configuration changed to <b>${newHours === 0.5 ? '30m' : newHours + ' Ghante'}</b>.`, "info");
+        }
+
+        // Play Over reset & audit log saving
+        function stopSeatSession(seatId, addToHistory = true) {
+            const seat = seats.find(s => s.id === seatId);
+            if (!seat) return;
+
+            stopAudioAlert(seatId);
+
+            const now = Date.now();
+
+            if (addToHistory && seat.isRunning) {
+                let actualElapsedMinutes = seat.initialDuration;
+                
+                if (seat.isPaused) {
+                    const spentMs = (seat.initialDuration * 60000) - seat.remainingMs;
+                    actualElapsedMinutes = Math.max(1, Math.round(spentMs / 60000));
+                } else if (seat.endTime && (seat.endTime > now)) {
+                    const totalMs = seat.initialDuration * 60000;
+                    const remainingMs = seat.endTime - now;
+                    const spentMs = totalMs - remainingMs;
+                    actualElapsedMinutes = Math.max(1, Math.round(spentMs / 60000));
+                }
+                
+                const logItem = {
+                    id: 'log-' + Date.now(),
+                    seatName: seat.name,
+                    duration: actualElapsedMinutes,
+                    timestamp: new Date().toLocaleTimeString('en-IN', { hour12: true })
+                };
+
+                logs.push(logItem);
+            }
+
+            seat.isRunning = false;
+            seat.startTime = null;
+            seat.endTime = null;
+            seat.alarmState = 'none';
+            seat.acknowledgedMilestones = {};
+            seat.isPaused = false;
+            seat.remainingMs = 0;
+
+            saveState();
+            renderWorkspaceCard(seat);
+            renderLogsTable();
+            updateStatsSummary();
+            showToast(`🛑 Play ended. Console <b>${seat.name}</b> has been cleared.`, "info");
         }
 
         function handleCustomTimeStart(e) {
@@ -795,66 +1224,129 @@
             const id = document.getElementById('customModalSeatId').value;
             const h = parseInt(document.getElementById('customHours').value) || 0;
             const m = parseInt(document.getElementById('customMinutes').value) || 0;
-            const mins = (h * 60) + m;
-            if (mins <= 0) return showToast("Time kam se kam 1 min hona chahiye.", "warning");
+
+            const totalMins = (h * 60) + m;
+
+            if (totalMins <= 0) {
+                showToast("1 minut se upar ka time specify karein.", "warning");
+                return;
+            }
 
             const seat = seats.find(s => s.id === id);
             if (seat) {
-                seat.isRunning = true; seat.startTime = Date.now();
-                seat.initialDuration = mins; seat.endTime = seat.startTime + (mins * 60000);
-                seat.targetHours = Math.ceil(mins/60); seat.alarmState = 'none'; seat.acknowledgedMilestones = {}; seat.isPaused = false; seat.remainingMs = mins * 60000;
-                saveState(); renderWorkspaceCard(seat); updateStatsSummary(); closeModals();
+                const now = Date.now();
+
+                seat.isRunning = true;
+                seat.startTime = now;
+                seat.endTime = now + (totalMins * 60000);
+                seat.targetHours = Math.ceil(totalMins / 60);
+                seat.initialDuration = totalMins;
+                seat.alarmState = 'none';
+                seat.acknowledgedMilestones = {};
+                seat.isPaused = false;
+                seat.remainingMs = totalMins * 60000;
+
+                saveState();
+
+                renderWorkspaceCard(seat);
+                updateStatsSummary();
+                closeModals();
+                showToast("🚀 Custom play started successfully.", "success");
             }
         }
 
-        function pauseSeatSession(seatId) {
-            const seat = seats.find(s => s.id === seatId); if (!seat || !seat.isRunning || seat.isPaused) return;
-            stopAudioAlert(seatId);
-            seat.remainingMs = Math.max(0, seat.endTime - Date.now());
-            seat.isPaused = true; seat.alarmState = 'none';
-            saveState(); renderWorkspaceCard(seat); updateStatsSummary(); triggerMobileVibration([100]);
-        }
+        function renderLogsTable() {
+            const tbody = document.getElementById('logsTableBody');
+            tbody.innerHTML = '';
 
-        function resumeSeatSession(seatId) {
-            const seat = seats.find(s => s.id === seatId); if (!seat || !seat.isRunning || !seat.isPaused) return;
-            seat.endTime = Date.now() + seat.remainingMs;
-            seat.startTime = seat.endTime - (seat.initialDuration * 60000);
-            seat.isPaused = false;
-            saveState(); renderWorkspaceCard(seat); updateStatsSummary(); triggerMobileVibration([150,50]);
-        }
+            if (logs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="p-3 text-center text-slate-500 font-bold italic">Session history is currently empty.</td>
+                    </tr>
+                `;
+                return;
+            }
 
-        function stopSeatSession(seatId) {
-            const seat = seats.find(s => s.id === seatId); if (!seat) return;
-            stopAudioAlert(seatId);
-            seat.isRunning = false; seat.startTime = null; seat.endTime = null; seat.alarmState = 'none'; seat.isPaused = false; seat.remainingMs = 0;
-            saveState(); renderWorkspaceCard(seat); updateStatsSummary();
-            showToast(`🛑 ${seat.name} time completely cleared.`, "info");
+            const reversedLogs = [...logs].reverse();
+            reversedLogs.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/40 text-slate-300 transition-all border-b border-white/5";
+                tr.innerHTML = `
+                    <td class="p-2.5 font-luxury font-black text-yellow-500">${log.seatName}</td>
+                    <td class="p-2.5 font-bold">${log.duration} Mins</td>
+                    <td class="p-2.5 text-right text-slate-500 font-mono text-[9px]">${log.timestamp}</td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         function updateStatsSummary() {
-            let active = 0, warns = 0, dangerAlerts = 0;
+            let active = 0;
+            let warns = 0;
+            let dangerAlerts = 0;
+
             seats.forEach(seat => {
-                if (seat.isRunning) { active++; if (seat.alarmState === 'warning') warns++; if (seat.alarmState === 'danger') dangerAlerts++; }
+                if (seat.isRunning) {
+                    active++;
+                    if (seat.alarmState === 'warning') warns++;
+                    if (seat.alarmState === 'danger') dangerAlerts++;
+                }
             });
+
             document.getElementById('activeCounter').innerText = active;
             document.getElementById('warningCounter').innerText = warns;
             document.getElementById('alarmCounter').innerText = dangerAlerts;
+        }
+
+        function clearLogs() {
+            const check = confirm("Kya aap sach me complete logs register ko reset karna chahte hain?");
+            if (check) {
+                logs = [];
+                saveState();
+                renderLogsTable();
+                updateStatsSummary();
+                showToast("🧹 History cleared.", "info");
+            }
         }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             
-            let clr = "bg-black/80 border-slate-700 text-slate-100"; let icon = "fa-solid fa-circle-info text-blue-400";
-            if (type === 'success') { clr = "bg-green-950/80 border-green-500/50 text-green-100"; icon = "fa-solid fa-check text-green-400"; }
-            else if (type === 'warning') { clr = "bg-yellow-950/80 border-yellow-500/50 text-yellow-100"; icon = "fa-solid fa-triangle-exclamation text-yellow-400"; }
-            else if (type === 'danger') { clr = "bg-red-950/80 border-red-500/50 text-red-100"; icon = "fa-solid fa-bolt text-red-400"; }
+            let colorTheme = "bg-slate-900 border-slate-800 text-slate-100";
+            let icon = "fa-solid fa-bell text-purple-400";
 
-            toast.className = `p-4 rounded-2xl border flex items-center gap-3 shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 transform translate-y-5 opacity-0 ${clr}`;
-            toast.innerHTML = `<div class="text-sm"><i class="${icon}"></i></div><div class="flex-grow text-[11px] font-bold leading-relaxed tracking-wider uppercase">${message}</div>`;
+            if (type === 'success') {
+                colorTheme = "bg-green-950/80 border-green-800/80 text-green-100 shadow-[0_0_15px_rgba(34,197,94,0.15)] backdrop-blur-md";
+                icon = "fa-solid fa-circle-check text-green-400";
+            } else if (type === 'warning') {
+                colorTheme = "bg-yellow-950/80 border-yellow-800/80 text-yellow-100 shadow-[0_0_15px_rgba(234,179,8,0.2)] backdrop-blur-md";
+                icon = "fa-solid fa-triangle-exclamation text-yellow-400 animate-pulse";
+            } else if (type === 'danger') {
+                colorTheme = "bg-red-950/80 border-red-800/80 text-red-100 shadow-[0_0_20px_rgba(239,68,68,0.25)] backdrop-blur-md";
+                icon = "fa-solid fa-circle-exclamation text-red-400";
+            }
+
+            toast.className = `p-3 rounded-2xl border flex items-start gap-2 shadow-xl transition-all duration-300 transform translate-y-5 opacity-0 ${colorTheme}`;
+            toast.innerHTML = `
+                <div class="text-xs mt-0.5"><i class="${icon}"></i></div>
+                <div class="flex-grow text-[10px] font-bold leading-relaxed">${message}</div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white transition-all"><i class="fa-solid fa-xmark text-xs"></i></button>
+            `;
+
             container.appendChild(toast);
-            setTimeout(() => { toast.classList.remove('translate-y-5', 'opacity-0'); toast.classList.add('translate-y-0', 'opacity-100'); }, 50);
-            setTimeout(() => { toast.classList.remove('translate-y-0', 'opacity-100'); toast.classList.add('translate-y-5', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 4000);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-x-5', 'opacity-0');
+                toast.classList.add('translate-x-0', 'opacity-100');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-x-0', 'opacity-100');
+                toast.classList.add('translate-x-5', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
         }
     </script>
 </body>
