@@ -87,7 +87,7 @@
                     </h1>
                     <p class="text-[9px] font-extrabold text-slate-400 tracking-widest uppercase flex items-center gap-1 mt-0.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> 
-                        Ultimate Screen Timer Suite v5.1
+                        Ultimate Screen Timer Suite v6.0
                     </p>
                 </div>
             </div>
@@ -133,7 +133,7 @@
                     <i class="fa-solid fa-microchip text-purple-500"></i> Active Station Monitors
                 </h2>
                 <div class="text-[9px] text-slate-500 font-bold bg-slate-900/80 border border-slate-800 px-2.5 py-1 rounded-full">
-                    Performance Boosted (Zero Lag & Power Cut Proof)
+                    Dynamic Remote Pricing Active (₹70/Remote)
                 </div>
             </div>
 
@@ -157,9 +157,9 @@
                 <table class="w-full text-left text-[10px] border-collapse">
                     <thead>
                         <tr class="bg-slate-900/70 border-b border-slate-800 text-slate-400 font-bold uppercase tracking-widest">
-                            <th class="p-2">Screen ID</th>
+                            <th class="p-2">Screen / Players</th>
                             <th class="p-2">Play Time</th>
-                            <th class="p-2">Billing Amount</th>
+                            <th class="p-2">Billing</th>
                             <th class="p-2 text-right">Completion Log</th>
                         </tr>
                     </thead>
@@ -219,8 +219,8 @@
                     <input type="text" id="addScreenName" placeholder="Jaise: S6, VIP-1" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-purple-500" required>
                 </div>
                 <div>
-                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Default 1 Hour Price (₹)</label>
-                    <input type="number" id="addScreenPrice" value="50" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-emerald-400 focus:outline-none focus:border-purple-500">
+                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Base Price (Per Remote) (₹)</label>
+                    <input type="number" id="addScreenPrice" value="70" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-emerald-400 focus:outline-none focus:border-purple-500">
                 </div>
                 <div class="pt-2 flex gap-2">
                     <button type="button" onclick="closeAddScreenModal()" class="w-1/2 bg-slate-800 text-[10px] py-2.5 rounded-xl font-bold uppercase tracking-wider text-slate-300">Cancel</button>
@@ -230,32 +230,36 @@
         </div>
     </div>
 
-    <!-- MODAL 2: CUSTOM DURATION MODULE -->
+    <!-- MODAL 2: CUSTOM DURATION & PLAYERS MODULE -->
     <div id="customTimeModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border-2 border-purple-500 w-full max-w-sm rounded-2xl p-5 relative shadow-[0_0_40px_rgba(139,92,246,0.3)]">
             <button onclick="closeCustomModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white transition-all">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <h3 class="text-sm font-black text-slate-100 flex items-center gap-1.5 uppercase tracking-wider">
-                <i class="fa-solid fa-sliders text-purple-400 animate-spin"></i> Custom Duration Config
+                <i class="fa-solid fa-sliders text-purple-400 animate-spin"></i> Custom Duration & Remotes
             </h3>
-            <p class="text-[10px] text-slate-400 mb-4" id="customModalSubText">Configure customized playtime limits and billing rates.</p>
+            <p class="text-[10px] text-slate-400 mb-4" id="customModalSubText">Configure customized playtime limits and player count.</p>
             
             <form onsubmit="handleCustomTimeStart(event)" class="space-y-3">
                 <input type="hidden" id="customModalSeatId">
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-3 gap-2">
                     <div>
                         <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Hours</label>
-                        <input type="number" id="customHours" value="1" min="0" max="24" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-purple-500">
+                        <input type="number" id="customHours" value="1" min="0" max="24" oninput="updateCustomRate()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-2 text-xs font-bold text-white focus:outline-none focus:border-purple-500 text-center">
                     </div>
                     <div>
                         <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Minutes</label>
-                        <input type="number" id="customMinutes" value="0" min="0" max="59" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-purple-500">
+                        <input type="number" id="customMinutes" value="0" min="0" max="59" oninput="updateCustomRate()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-2 text-xs font-bold text-white focus:outline-none focus:border-purple-500 text-center">
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Remotes</label>
+                        <input type="number" id="customRemotes" value="1" min="1" max="8" oninput="updateCustomRate()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-2 text-xs font-bold text-purple-400 focus:outline-none focus:border-purple-500 text-center">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Billing Amount (₹)</label>
-                    <input type="number" id="customRate" value="60" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-emerald-400 focus:outline-none focus:border-purple-500">
+                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Auto-Billing Amount (₹)</label>
+                    <input type="number" id="customRate" value="70" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-emerald-400 focus:outline-none focus:border-purple-500">
                 </div>
                 <div class="pt-2 flex gap-2">
                     <button type="button" onclick="closeCustomModal()" class="w-1/2 bg-slate-800 text-[10px] py-2.5 rounded-xl font-bold uppercase tracking-wider text-slate-300">Cancel</button>
@@ -286,10 +290,13 @@
 
             if (savedSeats) {
                 seats = JSON.parse(savedSeats);
-                // Defensive check: Backport "isPaused" and "remainingMs" if they don't exist
+                // Defensive check: Backport new attributes if they don't exist
                 seats.forEach(s => {
                     if (s.isPaused === undefined) s.isPaused = false;
                     if (s.remainingMs === undefined) s.remainingMs = 0;
+                    if (s.remotesCount === undefined) s.remotesCount = 1;
+                    // Auto upgrade old arbitrary Rs 50 entries to Rs 70 logic
+                    if (s.basePricePerHour === 50) s.basePricePerHour = 70;
                 });
             } else {
                 resetDefaultSeats();
@@ -321,11 +328,11 @@
 
         function resetDefaultSeats() {
             seats = [
-                { id: 'S1', name: 'S1', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 50, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 50, isPaused: false, remainingMs: 0 },
-                { id: 'S2', name: 'S2', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 50, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 50, isPaused: false, remainingMs: 0 },
-                { id: 'S3', name: 'S3', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 50, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 50, isPaused: false, remainingMs: 0 },
-                { id: 'S4', name: 'S4', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 50, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 50, isPaused: false, remainingMs: 0 },
-                { id: 'S5', name: 'S5', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 50, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 50, isPaused: false, remainingMs: 0 }
+                { id: 'S1', name: 'S1', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 70, remotesCount: 1, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 70, isPaused: false, remainingMs: 0 },
+                { id: 'S2', name: 'S2', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 70, remotesCount: 1, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 70, isPaused: false, remainingMs: 0 },
+                { id: 'S3', name: 'S3', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 70, remotesCount: 1, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 70, isPaused: false, remainingMs: 0 },
+                { id: 'S4', name: 'S4', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 70, remotesCount: 1, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 70, isPaused: false, remainingMs: 0 },
+                { id: 'S5', name: 'S5', isRunning: false, startTime: null, endTime: null, targetHours: 1, initialDuration: 60, rate: 70, remotesCount: 1, alarmState: 'none', acknowledgedMilestones: {}, basePricePerHour: 70, isPaused: false, remainingMs: 0 }
             ];
             saveState();
         }
@@ -353,7 +360,7 @@
 
                             const now = Date.now();
 
-                            // Warning scheduled alert (10 mins before end)
+                            // Warning scheduled alert
                             const warningDelay = warningTime - now;
                             if (warningDelay > 0) {
                                 const wId = setTimeout(() => {
@@ -367,7 +374,7 @@
                                 scheduledAlarms[seatId].push(wId);
                             }
 
-                            // Completion scheduled alert (BOOM BOOM)
+                            // Completion scheduled alert
                             const finalDelay = endTime - now;
                             if (finalDelay > 0) {
                                 const fId = setTimeout(() => {
@@ -406,7 +413,7 @@
 
         // Post scheduling instructions to Service Worker
         function syncAlarmsToBackground(seat) {
-            if (seat.isPaused) return; // Paused states don't get scheduled
+            if (seat.isPaused) return; 
             if (serviceWorkerReg && serviceWorkerReg.active) {
                 const warningTime = seat.endTime - 600000; 
                 serviceWorkerReg.active.postMessage({
@@ -479,7 +486,6 @@
                 const ctx = getSharedAudioContext();
                 
                 if (type === 'warning') {
-                    // Soft high-pitch cyclic warning chime
                     let interval = setInterval(() => {
                         if (!activeSoundOscillators[seatId]) {
                             clearInterval(interval);
@@ -504,7 +510,6 @@
                     activeSoundOscillators[seatId] = { interval };
                 } 
                 else if (type === 'danger') {
-                    // Critical Alarm sound loop - Arcade Siren "Boom Boom Boom"
                     let interval = setInterval(() => {
                         if (!activeSoundOscillators[seatId]) {
                             clearInterval(interval);
@@ -568,7 +573,6 @@
             seat.alarmState = 'none';
             saveState();
             
-            // Re-render only target card
             renderWorkspaceCard(seat);
             updateStatsSummary();
             showToast(`🔔 Sound alert muted for <b>${seat.name}</b>.`, "success");
@@ -636,23 +640,35 @@
 
             let bodyHTML = "";
             if (!seat.isRunning) {
-                const price1Hr = seat.basePricePerHour || 50;
-                const price2Hr = Math.round(price1Hr * 1.8);
+                // New Dynamic Pricing Logic based on Number of Remotes
+                const baseRate = seat.basePricePerHour || 70;
 
                 bodyHTML = `
                     <div class="my-2">
                         <div class="grid grid-cols-2 gap-2">
-                            <button onclick="quickStartSeat('${seat.id}', 1)" class="bg-gradient-to-tr from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 active:scale-95 text-xs text-white py-3 rounded-xl font-black transition-all shadow-md">
-                                1 Ghanta
-                                <span class="block text-[8px] font-normal opacity-70">₹${price1Hr}</span>
+                            <!-- 1 Hr / 1 Remote -->
+                            <button onclick="quickStartSeat('${seat.id}', 1, 1)" class="bg-gradient-to-tr from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 active:scale-95 text-[10px] text-white py-2 rounded-xl font-black transition-all shadow-md">
+                                1 Hr (1🎮)
+                                <span class="block text-[8px] font-normal opacity-70">₹${baseRate * 1 * 1}</span>
                             </button>
-                            <button onclick="quickStartSeat('${seat.id}', 2)" class="bg-gradient-to-tr from-pink-700 to-rose-600 hover:from-pink-600 hover:to-rose-500 active:scale-95 text-xs text-white py-3 rounded-xl font-black transition-all shadow-md">
-                                2 Ghante
-                                <span class="block text-[8px] font-normal opacity-70">₹${price2Hr}</span>
+                            <!-- 1 Hr / 2 Remotes -->
+                            <button onclick="quickStartSeat('${seat.id}', 1, 2)" class="bg-gradient-to-tr from-pink-700 to-rose-600 hover:from-pink-600 hover:to-rose-500 active:scale-95 text-[10px] text-white py-2 rounded-xl font-black transition-all shadow-md">
+                                1 Hr (2🎮)
+                                <span class="block text-[8px] font-normal opacity-70">₹${baseRate * 2 * 1}</span>
+                            </button>
+                            <!-- 2 Hr / 1 Remote -->
+                            <button onclick="quickStartSeat('${seat.id}', 2, 1)" class="bg-gradient-to-tr from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 active:scale-95 text-[10px] text-white py-2 rounded-xl font-black transition-all shadow-md">
+                                2 Hr (1🎮)
+                                <span class="block text-[8px] font-normal opacity-70">₹${baseRate * 1 * 2}</span>
+                            </button>
+                            <!-- 2 Hr / 2 Remotes -->
+                            <button onclick="quickStartSeat('${seat.id}', 2, 2)" class="bg-gradient-to-tr from-pink-700 to-rose-600 hover:from-pink-600 hover:to-rose-500 active:scale-95 text-[10px] text-white py-2 rounded-xl font-black transition-all shadow-md">
+                                2 Hr (2🎮)
+                                <span class="block text-[8px] font-normal opacity-70">₹${baseRate * 2 * 2}</span>
                             </button>
                         </div>
                         <button onclick="openCustomModal('${seat.id}')" class="w-full mt-2 bg-slate-950 hover:bg-slate-800 text-[10px] text-slate-400 hover:text-white py-2 rounded-xl transition-all border border-slate-800/50 font-bold uppercase tracking-widest">
-                            <i class="fa-solid fa-sliders text-purple-500"></i> Setup Custom
+                            <i class="fa-solid fa-sliders text-purple-500"></i> Setup Custom / 3+ Players
                         </button>
                     </div>
                 `;
@@ -683,7 +699,7 @@
                             <div class="text-2xl font-black tracking-widest font-mono ${seat.isPaused ? 'text-blue-400' : 'text-purple-400'}" id="raw-timer-${seat.id}">${formattedTimer}</div>
                             <div class="flex justify-between text-[8px] font-bold text-slate-500 uppercase tracking-wider mt-1 border-t border-slate-900/60 pt-1">
                                 <span>Target: <b>${seat.targetHours}H</b></span>
-                                <span>Billing: <b class="text-emerald-400 font-black">₹${seat.rate}</b></span>
+                                <span>Billing (${seat.remotesCount}🎮): <b class="text-emerald-400 font-black">₹${seat.rate}</b></span>
                             </div>
                         </div>
 
@@ -753,7 +769,6 @@
             seats.forEach(seat => {
                 if (seat.isRunning) {
                     if (seat.isPaused) {
-                        // Keep UI clock frozen and skip background warning timers
                         const timerEl = document.getElementById(`raw-timer-${seat.id}`);
                         if (timerEl) {
                             const timeLeft = seat.remainingMs;
@@ -763,7 +778,7 @@
                             timerEl.innerText = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
                             timerEl.className = "text-2xl font-black tracking-widest font-mono text-blue-400 animate-pulse";
                         }
-                        return; // Skip normal alerts processing for paused items
+                        return; 
                     }
 
                     const elapsedMinutes = Math.floor((now - seat.startTime) / 60000);
@@ -846,7 +861,6 @@
 
             const now = Date.now();
             seat.endTime = now + seat.remainingMs;
-            // Shifting start time forward relative to the freeze gap to preserve billing metrics integrity
             seat.startTime = seat.endTime - (seat.initialDuration * 60000);
             seat.isPaused = false;
 
@@ -874,7 +888,7 @@
         function handleAddNewScreen(e) {
             e.preventDefault();
             const name = document.getElementById('addScreenName').value.trim().toUpperCase();
-            const price = parseInt(document.getElementById('addScreenPrice').value) || 50;
+            const price = parseInt(document.getElementById('addScreenPrice').value) || 70;
 
             if (!name) return;
 
@@ -892,6 +906,7 @@
                 targetHours: 1,
                 initialDuration: 60,
                 rate: price,
+                remotesCount: 1,
                 alarmState: 'none',
                 acknowledgedMilestones: {},
                 basePricePerHour: price,
@@ -925,18 +940,16 @@
             }
         }
 
-        // Quick Launch Button handler
-        function quickStartSeat(seatId, hours) {
+        // Quick Launch Button handler with Remotes Logic
+        function quickStartSeat(seatId, hours, remotes = 1) {
             const seat = seats.find(s => s.id === seatId);
             if (!seat) return;
 
-            const baseRate = seat.basePricePerHour || 50;
+            const baseRate = seat.basePricePerHour || 70;
             const durationMinutes = hours * 60;
             
-            let finalRate = baseRate;
-            if (hours === 2) finalRate = Math.round(baseRate * 1.8);
-            if (hours === 3) finalRate = Math.round(baseRate * 2.6);
-            if (hours === 4) finalRate = Math.round(baseRate * 3.2);
+            // Standard Multiplier logic: Base Rate * Number of Players/Remotes * Number of Hours
+            let finalRate = baseRate * remotes * hours;
 
             const now = Date.now();
 
@@ -946,6 +959,7 @@
             seat.targetHours = hours;
             seat.initialDuration = durationMinutes;
             seat.rate = finalRate;
+            seat.remotesCount = remotes;
             seat.alarmState = 'none';
             seat.acknowledgedMilestones = {};
             seat.isPaused = false;
@@ -958,7 +972,7 @@
             updateStatsSummary();
             
             triggerMobileVibration([150, 50, 150]);
-            showToast(`🚀 Screen <b>${seat.name}</b> active! Target: <b>${hours} Ghanta</b>.`, "success");
+            showToast(`🚀 Screen <b>${seat.name}</b> active! Target: <b>${hours} Hr / ${remotes}🎮</b>.`, "success");
         }
 
         // Change target
@@ -968,7 +982,8 @@
 
             stopAudioAlert(seatId);
 
-            const baseRate = seat.basePricePerHour || 50;
+            const baseRate = seat.basePricePerHour || 70;
+            const remotes = seat.remotesCount || 1;
             const newTotalDurationMinutes = newHours * 60;
 
             seat.targetHours = newHours;
@@ -976,15 +991,11 @@
             seat.endTime = seat.startTime + (newTotalDurationMinutes * 60 * 1000);
             seat.alarmState = 'none';
             
-            let updatedCost = baseRate;
-            if (newHours === 2) updatedCost = Math.round(baseRate * 1.8);
-            if (newHours === 3) updatedCost = Math.round(baseRate * 2.6);
-            if (newHours === 4) updatedCost = Math.round(baseRate * 3.2);
-            seat.rate = updatedCost;
+            // Update rates mathematically with saved remotes configuration
+            seat.rate = baseRate * remotes * newHours;
 
             seat.acknowledgedMilestones = {};
 
-            // Update remaining milliseconds parameter based on new configurations
             const now = Date.now();
             seat.remainingMs = Math.max(0, seat.endTime - now);
 
@@ -1009,7 +1020,6 @@
             if (addToHistory && seat.isRunning) {
                 let actualElapsedMinutes = seat.initialDuration;
                 
-                // Smart calculation for elapsed play time in case stopped prematurely
                 if (seat.isPaused) {
                     const spentMs = (seat.initialDuration * 60000) - seat.remainingMs;
                     actualElapsedMinutes = Math.max(1, Math.round(spentMs / 60000));
@@ -1022,7 +1032,7 @@
                 
                 const logItem = {
                     id: 'log-' + Date.now(),
-                    seatName: seat.name,
+                    seatName: `${seat.name} (${seat.remotesCount}🎮)`,
                     duration: actualElapsedMinutes,
                     amount: seat.rate,
                     timestamp: new Date().toLocaleTimeString('en-IN', { hour12: true })
@@ -1038,6 +1048,7 @@
             seat.acknowledgedMilestones = {};
             seat.isPaused = false;
             seat.remainingMs = 0;
+            seat.remotesCount = 1;
 
             saveState();
             renderWorkspaceCard(seat);
@@ -1046,21 +1057,33 @@
             showToast(`🛑 Play ended. Console <b>${seat.name}</b> has been cleared.`, "info");
         }
 
+        // Auto update custom rate billing logic script
+        function updateCustomRate() {
+            const h = parseFloat(document.getElementById('customHours').value) || 0;
+            const m = parseFloat(document.getElementById('customMinutes').value) || 0;
+            const r = parseInt(document.getElementById('customRemotes').value) || 1;
+            
+            const totalHours = h + (m / 60);
+            const baseCharge = 70; // Using default 70 per remote
+            
+            document.getElementById('customRate').value = Math.round(totalHours * r * baseCharge);
+        }
+
         // Custom time dialog handlers
         function openCustomModal(seatId) {
             const seat = seats.find(s => s.id === seatId);
             if (!seat) return;
 
             document.getElementById('customModalSeatId').value = seatId;
-            document.getElementById('customModalSubText').innerText = `Setup manual countdown specifications for Station ${seat.name}.`;
-            document.getElementById('customRate').value = seat.basePricePerHour;
+            document.getElementById('customHours').value = '1';
+            document.getElementById('customMinutes').value = '0';
+            document.getElementById('customRemotes').value = '1';
+            updateCustomRate();
             document.getElementById('customTimeModal').classList.remove('hidden');
         }
 
         function closeCustomModal() {
             document.getElementById('customTimeModal').classList.add('hidden');
-            document.getElementById('customHours').value = '1';
-            document.getElementById('customMinutes').value = '0';
         }
 
         function handleCustomTimeStart(e) {
@@ -1068,6 +1091,7 @@
             const id = document.getElementById('customModalSeatId').value;
             const h = parseInt(document.getElementById('customHours').value) || 0;
             const m = parseInt(document.getElementById('customMinutes').value) || 0;
+            const r = parseInt(document.getElementById('customRemotes').value) || 1;
             const rate = parseFloat(document.getElementById('customRate').value) || 0;
 
             const totalMins = (h * 60) + m;
@@ -1087,6 +1111,7 @@
                 seat.targetHours = Math.ceil(totalMins / 60);
                 seat.initialDuration = totalMins;
                 seat.rate = rate;
+                seat.remotesCount = r;
                 seat.alarmState = 'none';
                 seat.acknowledgedMilestones = {};
                 seat.isPaused = false;
